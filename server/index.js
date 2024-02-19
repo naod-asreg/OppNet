@@ -14,7 +14,7 @@ mongoose.connect(mongoURL)
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
-// Define User schema
+// User schema
 const userSchema = new mongoose.Schema({
     name: String,
     username: { type: String, unique: true },
@@ -36,14 +36,28 @@ app.post('/users', async (req, res) => {
 });
 
 // Get User endpoint
-app.get('/user', async (req, res) => {
+app.get('/user/:username', async (req, res) => {
     try {
-        const { username } = req.body; 
+        const { username } = req.params; 
         const user = await User.findOne({ username });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
         res.json(user);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// Delete User endpoint
+app.delete('/users/:username', async (req, res) => {
+    try {
+        const { username } = req.params;
+        const deletedUser = await User.findOneAndDelete({ username });
+        if (!deletedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json({ message: 'User deleted successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

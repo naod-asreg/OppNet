@@ -1,0 +1,41 @@
+.Sidebar {
+    background: #D4D3D1;
+    height: 100vh;
+    width: 8%; 
+    padding: 1rem 0.2rem; 
+}
+
+.sidebar_top { 
+    width: 100%; 
+    height: 10%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    margin: 1rem 0; 
+    margin-bottom: 4rem; 
+
+}
+
+.sidebar_top_square { 
+    overflow: hidden;
+    height: 4.7em; 
+    width: 4.7em; 
+    border: 1px solid white; 
+}
+.sidebar_top_square img { 
+    display: block ; 
+    width: 100%; 
+    height: auto; 
+}
+
+.sidebar_buttons { 
+
+    width: 100%; 
+    height: 35%; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 15%; 
+    
+}
+

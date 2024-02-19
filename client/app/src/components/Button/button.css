@@ -1,0 +1,8 @@
+.Button { 
+    width: 3.8rem; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border: 1px solid black; 
+    padding: 0.4em; 
+}

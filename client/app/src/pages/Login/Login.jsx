@@ -45,7 +45,7 @@ function Login() {
   async function handleLoginAttempt(e) {
     try {
       // Check if the professor already exists in the syste
-        navigate("/profile");
+        navigate("/home");
     } catch (error) {
       // Handle network or other errors
       console.log(error)

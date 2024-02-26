@@ -4,6 +4,7 @@ import Landing from './pages/Landing/Landing';
 import Login from './pages/Login/Login';
 import Profile from './pages/Profile/Profile';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import Home from './pages/Home/Home';
 
 
 
@@ -16,6 +17,7 @@ function App() {
           <Route path='/' element={<Landing/>}/>
           <Route path='/login' element={<Login/>} />
           <Route path='/profile' element={<Profile/>}/>
+          <Route path='/home' element={<Home/>}/>
         </Routes>
       </BrowserRouter>
     </GoogleOAuthProvider>

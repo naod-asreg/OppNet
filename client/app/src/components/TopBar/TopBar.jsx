@@ -3,7 +3,7 @@ import './topBar.css'
 import Button from '../Button/Button'
 import Logo from "../../assets/Logo.png"
 import { useNavigate } from 'react-router-dom';
-function TopBar() {
+function TopBar({loggedIn}) {
   let navigate = useNavigate();
   const goLoginPage = () =>{
     navigate("/login")
@@ -28,8 +28,14 @@ function TopBar() {
         </div>
       </div>
       <div className="topBar_buttons">
-        <Button content={'Sign Up'}/>
-        <Button content={'Login'} color='black' onClick={goLoginPage}/>
+        {loggedIn ?
+          
+          <> <Button content={'Sign Up'}/>
+          <Button content={'Login'} color='black' onClick={goLoginPage}/></>
+          :
+          <> <Button content={'Log out'}/></>
+        }
+        
       </div>
     </div>
   )

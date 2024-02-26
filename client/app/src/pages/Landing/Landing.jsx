@@ -9,7 +9,7 @@ function Landing() {
   return (
     <div className="Landing">
       <div className="landing_topBar">
-        <TopBar />
+        <TopBar loggedIn={true}/>
       </div>
 
       <div className="landing_section">

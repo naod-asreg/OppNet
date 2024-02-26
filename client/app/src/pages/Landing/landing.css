@@ -94,3 +94,9 @@
     align-items: center;
     gap: 1em
 }
+
+.landing_footer { 
+    height: 15%; 
+    width: 100%; 
+    background: red; 
+}

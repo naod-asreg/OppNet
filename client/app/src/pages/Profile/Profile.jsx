@@ -87,15 +87,11 @@ function Profile() {
                         <label>Password</label>
                         <input type={"text"} placeholder="*****"></input>
                   </div>
-
                   <div className="profile_section_content_edit_middle_buttons">
                     <Button content={"Save"}/>
                     <Button content={"Cancel"} color={'black'}/>
                   </div>
-
               </div>
-
-              
             </div>
         </div>
       </div>  

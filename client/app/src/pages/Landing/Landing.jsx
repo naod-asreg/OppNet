@@ -82,6 +82,10 @@ function Landing() {
             </div>
         </div>
       </div>
+
+      <div className="landing_footer">
+
+      </div>
     </div>
   );
 }

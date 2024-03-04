@@ -42,6 +42,8 @@ function Login() {
     }
   }, [user]);
   let navigate = useNavigate();
+
+  
   async function handleLoginAttempt(e) {
     try {
       const adjustedProfile = {

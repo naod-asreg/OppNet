@@ -7,11 +7,11 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 function Home() {
     const [applications, setApplications] = useState([]);
-
+    const user = JSON.parse(localStorage.getItem("user"));
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get('http://localhost:5555/application');
+          const response = await axios.get(`http://localhost:5555/application/${user.userId}`);
           setApplications(response.data);
         } catch (error) {
           console.error('Error fetching data:', error.message);

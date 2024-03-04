@@ -2,6 +2,8 @@ import express from "express";
 import { port, mongoURL } from "./config.js";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+import cors from 'cors';
+
 
 const app = express();
 
@@ -13,6 +15,7 @@ mongoose.connect(mongoURL)
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
+app.use(cors());
 
 const counterSchema = new mongoose.Schema({
     _id: { type: String, required: true },
@@ -57,11 +60,24 @@ app.post('/users', async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 });
-// Get User endpoint
-app.get('/user/:username', async (req, res) => {
+// Get User endpointss
+app.get('/users/:email', async (req, res) => {
     try {
-        const { username } = req.params; 
-        const user = await User.findOne({ username });
+        const { email } = req.params; 
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+app.get('/users/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params; 
+        const user = await User.findOne({ userId });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -72,10 +88,10 @@ app.get('/user/:username', async (req, res) => {
 });
 
 // Delete User endpoint
-app.delete('/users/:username', async (req, res) => {
+app.delete('/users/:userId', async (req, res) => {
     try {
-        const { username } = req.params;
-        const deletedUser = await User.findOneAndDelete({ username });
+        const { userId } = req.params;
+        const deletedUser = await User.findOneAndDelete({ userId });
         if (!deletedUser) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -154,7 +170,7 @@ app.post('/application', async (req, res) => {
 
 
 //get application based on userid
-//future changes will be to return only the metadata
+//future changes will be toreturn only the metadata
 app.get('/application/:userId', async (req, res) => {
     try {
         const {userId} = req.params;

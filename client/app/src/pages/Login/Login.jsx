@@ -16,10 +16,10 @@ function Login() {
 
   useEffect(() => {
     if (profile.length !== 0) {
-      localStorage.setItem("user", JSON.stringify(profile));
+     // localStorage.setItem("user", JSON.stringify(profile));
 
       handleLoginAttempt();
-      console.log(profile);
+      console.log(profile); 
     }
   }, [profile]);
 
@@ -44,13 +44,32 @@ function Login() {
   let navigate = useNavigate();
   async function handleLoginAttempt(e) {
     try {
-      // Check if the professor already exists in the syste
+      const adjustedProfile = {
+        name: profile.name,
+        email: profile.email,
+      };
+  
+      // Check if user exists by making a GET request to the backend endpoint
+      const userExistsResponse = await axios.get(`http://localhost:5555/users/${profile.email}`);
+  
+      if (userExistsResponse.status === 200) {
+        // User exists, extract userId from the response
+        const existingUser = userExistsResponse.data;
+        localStorage.setItem("user", JSON.stringify(existingUser)); // Store userId in localStorage
         navigate("/home");
+      } else if (userExistsResponse.status === 404) {
+        // User does not exist, create a new user
+        const response = await axios.post("http://localhost:5555/users", adjustedProfile);
+        const newUser = response.data; // New user object returned by the server
+        localStorage.setItem("user", JSON.stringify(newUser)); // Store userId in localStorage
+        navigate("/home");
+      }
     } catch (error) {
       // Handle network or other errors
-      console.log(error)
+      console.log(error);
     }
   }
+  
  
   return (
     <div className="login">

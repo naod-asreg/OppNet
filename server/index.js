@@ -122,9 +122,14 @@ app.listen(port, () => {
 
 
 // Applicaition Schema
+// description
+// notifications (boolean array)
+// deadlines : [ ]
+// tasks : [two things]
 const applicationSchema = new mongoose.Schema({
     type: { type: String, enum: ['JOB', 'COLLEGE'] },
     applicationId : Number,
+    description: String,
     userId: { type: Number, ref: 'User', required: true },
     jobTitle: { type: String, required: function() { return this.type === 'JOB'; } },
     company: { type: String, required: function() { return this.type === 'JOB'; } },
@@ -137,6 +142,12 @@ const applicationSchema = new mongoose.Schema({
         of: String,
     },
     recommendationLetters: [String],
+    notifications: { type: Boolean, default: false }, // New field: notifications
+    deadlines: [{ // New field: deadlines (array of objects)
+        name: String,
+        date: Date
+    }],
+    tasks: [String] // New field: tasks (array of strings)
 });
 
 const Application = mongoose.model('Application', applicationSchema);

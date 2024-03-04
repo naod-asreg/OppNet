@@ -7,8 +7,10 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import EntryFocused from "../../componentsntryFocused/EntryFocused";
 function Home() {
-    const [applications, setApplications] = useState([]);
-    const user = JSON.parse(localStorage.getItem("user"));
+  const [applications, setApplications] = useState([]);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -21,7 +23,6 @@ function Home() {
   
       fetchData();
     }, []);
-
 
   return (
     <div className="Home">
@@ -66,16 +67,6 @@ function Home() {
               </tr>
             </thead>
             <tbody>
-              {/* Table rows go here */}
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap">1</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  Frontend Developer
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">ABC Inc</td>
-                <td className="px-6 py-4 whitespace-nowrap">City, Country</td>
-                <td className="px-6 py-4 whitespace-nowrap">Active</td>
-              </tr>
               {applications.map((application) => (
               <tr key={application.id}>
                 <td className="px-6 py-4 whitespace-nowrap">{application.id}</td>
@@ -87,7 +78,7 @@ function Home() {
             ))}
             </tbody>
           </table>
-         <NewEntryForm/>
+          <NewEntryForm userId={user.userId} />
         </div>
       </div>
       <EntryFocused/>

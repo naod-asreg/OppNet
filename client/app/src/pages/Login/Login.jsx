@@ -71,7 +71,7 @@ function Login() {
         localStorage.setItem("user", JSON.stringify(newUser)); // Store userId in localStorage
         navigate("/home");
       }
-      
+
      console.log(error);
     }
   }

@@ -27,7 +27,7 @@ const Counter = mongoose.model('Counter', counterSchema);
 const userSchema = new mongoose.Schema({
     name: String,
     userId : Number,
-    username: { type: String, unique: true },
+    username: String,
     email: String,
     password: String,
     university: String,

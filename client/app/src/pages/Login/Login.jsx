@@ -53,22 +53,26 @@ function Login() {
   
       // Check if user exists by making a GET request to the backend endpoint
       const userExistsResponse = await axios.get(`http://localhost:5555/users/${profile.email}`);
-  
-      if (userExistsResponse.status === 200) {
+      if (userExistsResponse.status === 200) { 
         // User exists, extract userId from the response
         const existingUser = userExistsResponse.data;
         localStorage.setItem("user", JSON.stringify(existingUser)); // Store userId in localStorage
         navigate("/home");
-      } else if (userExistsResponse.status === 404) {
-        // User does not exist, create a new user
+      } 
+    } catch (error) {
+
+      if(error.response.status === 404){
+        const adjustedProfile = {
+          name: profile.name,
+          email: profile.email,
+        };
         const response = await axios.post("http://localhost:5555/users", adjustedProfile);
         const newUser = response.data; // New user object returned by the server
         localStorage.setItem("user", JSON.stringify(newUser)); // Store userId in localStorage
         navigate("/home");
       }
-    } catch (error) {
-      // Handle network or other errors
-      console.log(error);
+      
+     console.log(error);
     }
   }
   

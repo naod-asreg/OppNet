@@ -157,7 +157,6 @@ app.post('/application', async (req, res) => {
 
         // Create a new application with the obtained application ID
         const newApplication = await Application.create({ ...req.body, applicationId });
-
         // Increment the sequence value for application ID in the counter schema
         counter.sequenceValue++;
         await counter.save();

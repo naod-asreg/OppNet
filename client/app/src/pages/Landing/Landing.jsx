@@ -5,6 +5,7 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import ImageConnect from '../../assets/pexels-christina-morillo-1181715.jpg';
 import ImageCollaborate from '../../assets/pexels-fauxels-3184291.jpg'
 import Button from "../../components/Button/Button";
+
 function Landing() {
   return (
     <div className="Landing">

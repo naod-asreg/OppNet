@@ -5,6 +5,7 @@ import "./home.css";
 import NewEntryForm from "../../components/New Entry/NewEntryForm";
 import axios from 'axios';
 import { useEffect, useState } from "react";
+import EntryFocused from "../../componentsntryFocused/EntryFocused";
 function Home() {
     const [applications, setApplications] = useState([]);
     const user = JSON.parse(localStorage.getItem("user"));
@@ -89,7 +90,7 @@ function Home() {
          <NewEntryForm/>
         </div>
       </div>
-
+      <EntryFocused/>
     </div>
   );
 }

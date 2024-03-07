@@ -13,16 +13,17 @@ import { GoBriefcase } from "react-icons/go";
 
 
 
-function EntryFocused({applicationId}) {
+function EntryFocused({entry, onClose}) {
     const [value, onChange] = useState(new Date());
   return (
     <div className='EntryFocused'>
       <div className="entry_focused_header">
         <div className="entry_focused_header_title">
-            <h3>Microsoft SDE</h3>
+            <h3>{entry.jobTitle}</h3>
+            <h4>{entry.company}</h4>
         </div>
         <div className="entry_focused_header_buttons">
-            <Button content={"X"} color={"black"}/>
+            <Button content={"X"} color={"black"} onClick={onClose}/>
         </div>
       </div>
       <div className="entry_focused_content">
@@ -46,7 +47,7 @@ function EntryFocused({applicationId}) {
                     <textarea placeholder="Include Notes..."></textarea>
                 </div>
             </div>
-            <Calendar value={value} onChange={onChange}/>
+            <Calendar className="calendar" value={value} onChange={onChange}/>
         </div>
         <div className="entry_focused_content_left_bar">
             <div className="entry_focused_content_left_bar_actions">

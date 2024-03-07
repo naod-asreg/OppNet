@@ -5,24 +5,37 @@ import "./home.css";
 import NewEntryForm from "../../components/New Entry/NewEntryForm";
 import axios from 'axios';
 import { useEffect, useState } from "react";
-import EntryFocused from "../../componentsntryFocused/EntryFocused";
+import EntryFocused from "../../components/EntryFocused/EntryFocused";
+import Button from "../../components/Button/Button";
 function Home() {
   const [applications, setApplications] = useState([]);
+  const [focusedEntry, setFocusedEntry] = useState(null);
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
+  const openPopup = (entry) => {
+    setFocusedEntry(entry);
+    setPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setPopupOpen(false);
+  };
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(`http://localhost:5555/application/${user.userId}`);
-          setApplications(response.data);
-        } catch (error) {
-          console.error('Error fetching data:', error.message);
-        }
-      };
-  
-      fetchData();
-    }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5555/application/${user.userId}`);
+        setApplications(response.data);
+        console.log(response.data)
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="Home">
@@ -64,16 +77,23 @@ function Home() {
                 >
                   Status
                 </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Expand
+                </th>
               </tr>
             </thead>
             <tbody>
               {applications.map((application) => (
               <tr key={application.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{application.id}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.jobPosition}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{application.applicationId}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{application.jobTitle}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{application.company}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{application.location}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{application.status}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{<Button content={"Expand"} color={"black"} onClick={() => openPopup(application)}/>}</td>
               </tr>
             ))}
             </tbody>
@@ -81,7 +101,12 @@ function Home() {
           <NewEntryForm userId={user.userId} />
         </div>
       </div>
-      <EntryFocused/>
+
+      {isPopupOpen && (
+        <div className="popup-background">
+          <EntryFocused entry={focusedEntry} onClose={closePopup} />
+        </div>
+      )}
     </div>
   );
 }

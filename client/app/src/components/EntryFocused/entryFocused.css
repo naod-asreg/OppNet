@@ -6,12 +6,17 @@
 }
 
 .entry_focused_header {
-    padding: 0.2rem;
+    padding: 0.5rem;
     height: 10%;  
     box-sizing: border-box;
 }
 .entry_focused_header_title{
-    margin-left: 0.5rem
+    margin-left: 0.5rem;
+}
+
+.entry_focused_header_title h4{
+    position: relative;
+    
 }
 .entry_focused_header_buttons {
     position: relative;
@@ -82,7 +87,7 @@
     padding: 0.4rem; 
     cursor: pointer; 
     border-radius: 4px; 
-
+    
 }
 
 .entry_focused_content_left_bar_actions_buttons{
@@ -91,4 +96,21 @@
     display: flex; 
     flex-direction: column; 
     gap: 0.3rem ;
+    margin-bottom: 0.9rem; 
+}
+
+.popup-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for the blur effect */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it's above other content */
+  }
+.calendar {
+    margin-left: 3.2rem; 
 }

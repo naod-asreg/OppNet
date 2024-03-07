@@ -16,6 +16,12 @@ code {
     monospace;
 }
 
+h4{
+  margin: 0
+}
+h3{
+  margin: 0; 
+}
 
 :root { 
   --primary-color: #F5FEFD;

@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from 'cors';
 
-//models
 
 import userRoutes from './routes/userRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
@@ -22,7 +21,7 @@ mongoose.connect(mongoURL)
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/chat', chatRoutes);
+app.use('/chats', chatRoutes);
 app.use('/users', userRoutes);
 app.use('/application', applicationRoutes);
 

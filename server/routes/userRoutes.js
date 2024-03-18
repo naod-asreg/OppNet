@@ -15,10 +15,10 @@ app.post('/', async (req, res) => {
         }
 
         const userId = counter.sequenceValue;
-
+        
         // Create a new user with the obtained user ID
         const newUser = await User.create({ ...req.body, userId });
-
+    
         // Increment the sequence value for user ID in the counter schema
         counter.sequenceValue++;
         await counter.save();
@@ -33,7 +33,7 @@ app.get('/:email', async (req, res) => {
     try {
         const { email } = req.params; 
         const user = await User.findOne({ email });
-
+        
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }

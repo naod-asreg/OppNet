@@ -5,7 +5,7 @@ import Login from './pages/Login/Login';
 import Profile from './pages/Profile/Profile';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Home from './pages/Home/Home';
-
+import Chat from './pages/Chat/chat';
 
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
           <Route path='/login' element={<Login/>} />
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/home' element={<Home/>}/>
+          <Route path='/chat' element={<Chat/>}/>
         </Routes>
       </BrowserRouter>
     </GoogleOAuthProvider>

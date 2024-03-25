@@ -1,44 +1,52 @@
-import React from 'react'
-import './topBar.css'
-import Button from '../Button/Button'
-import Logo from "../../assets/Logo.png"
+import React from 'react';
+import './topBar.css';
+import Button from '../Button/Button';
+import Logo from "../../assets/Logo.png";
 import { useNavigate } from 'react-router-dom';
-function TopBar({loggedIn}) {
-  let navigate = useNavigate();
-  const goLoginPage = () =>{
-    navigate("/login")
-  }
+
+function TopBar({ loggedIn }) {
+  const navigate = useNavigate();
+
+  const goLoginPage = () => {
+    navigate("/login");
+  };
+
+  const goToChatPage = () => {
+    navigate("/chat");
+  };
+
   return (
     <div className='topBar'>
       <div className="topBar_logo">
-        <img src={Logo}/>
+        <img src={Logo} alt="Logo" />
       </div>
       <div className="topBar_titles">
         <div className="topBar_titles_title">
-            <h4>Track Applications</h4>
+          <h4>Track Applications</h4>
         </div>
         <div className="topBar_titles_title">
-            <h4>Connect</h4>
+          <h4>Connect</h4>
         </div>
         <div className="topBar_titles_title">
-            <h4>Chat</h4>
+          {/* Make the "Chat" title a button */}
+          <Button content={'Chat'} onClick={goToChatPage} />
         </div>
         <div className="topBar_titles_title">
-            <h4>More</h4>
+          <h4>More</h4>
         </div>
       </div>
       <div className="topBar_buttons">
         {loggedIn ?
-          
-          <> <Button content={'Sign Up'}/>
-          <Button content={'Login'} color='black' onClick={goLoginPage}/></>
+          <>
+            <Button content={'Sign Up'} />
+            <Button content={'Login'} color='black' onClick={goLoginPage} />
+          </>
           :
-          <> <Button content={'Log out'}/></>
+          <Button content={'Log out'} />
         }
-        
       </div>
     </div>
-  )
+  );
 }
 
-export default TopBar
+export default TopBar;

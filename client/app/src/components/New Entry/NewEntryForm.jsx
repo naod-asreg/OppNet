@@ -1,12 +1,14 @@
 // NewEntryForm.js
 import React, { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 
-function NewEntryForm({ userId }) { // Change parameter name to userId (camelCase)
+function NewEntryForm({ userId }) {
+  // Change parameter name to userId (camelCase)
   const [entryType, setEntryType] = useState("");
   const [entryData, setEntryData] = useState({
     userId: userId, // Correct the assignment to userId variable (remove quotes)
-    type: ""
+    type: "",
+    status: ""
   });
 
   const handleChangeType = (e) => {
@@ -21,19 +23,20 @@ function NewEntryForm({ userId }) { // Change parameter name to userId (camelCas
 
     try {
       // Post new entry data to the application
-      await axios.post('http://localhost:5555/application', entryData);
+      await axios.post("http://localhost:5555/application", entryData);
       console.log("New entry submitted successfully");
     } catch (error) {
-      console.error('Error submitting new entry:', error.message);
+      console.error("Error submitting new entry:", error.message);
     }
 
     // Reset form fields
     setEntryType("");
-    setEntryData({ userId: userId, type: "" }); // Reset entryData with correct userId value
+    setEntryData({ userId: userId, type: "" , status: ""}); // Reset entryData with correct userId value
   };
 
   const handleChange = (e) => {
     setEntryData({ ...entryData, [e.target.name]: e.target.value });
+    console.log(e.target.name)
   };
 
   return (
@@ -55,6 +58,16 @@ function NewEntryForm({ userId }) { // Change parameter name to userId (camelCas
           <label>
             Company:
             <input type="text" name="company" onChange={handleChange} />
+          </label>
+          <label>
+            Current Status:
+            <select name="status" onChange={handleChange}>
+              <option value="Under Review">Under Review</option>
+              <option value="Online Assessment">Online Assessment</option>
+              <option value="Interview">Interview</option>
+              <option value="Offer">Offer</option>
+              <option value="Closed">Closed</option>
+            </select>
           </label>
         </>
       )}

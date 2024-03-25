@@ -28,14 +28,13 @@ function Home() {
       try {
         const response = await axios.get(`http://localhost:5555/application/${user.userId}`);
         setApplications(response.data);
-        console.log(response.data)
       } catch (error) {
         console.error('Error fetching data:', error.message);
       }
     };
 
     fetchData();
-  }, []);
+  }, [applications]);
 
   return (
     <div className="Home">
@@ -69,7 +68,7 @@ function Home() {
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Location
+                  Notifications
                 </th>
                 <th
                   scope="col"
@@ -91,7 +90,7 @@ function Home() {
                 <td className="px-6 py-4 whitespace-nowrap">{application.applicationId}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{application.jobTitle}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{application.company}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.location}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{application.notifications? "ON": "OFF"}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{application.status}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{<Button content={"Expand"} color={"black"} onClick={() => openPopup(application)}/>}</td>
               </tr>

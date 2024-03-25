@@ -111,6 +111,18 @@
     justify-content: center;
     z-index: 1000; /* Ensure it's above other content */
   }
-.calendar {
-    margin-left: 3.2rem; 
+
+
+.entry_focused_content_section_calendar{
+    margin-left: 1rem; 
 }
+
+.entry_focused_content_section_bottom{
+    width: 100%; 
+    display: flex; 
+    justify-content: space-arround
+}
+
+ul {
+    list-style-type: none;
+  }

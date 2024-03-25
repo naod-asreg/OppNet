@@ -130,6 +130,7 @@ const applicationSchema = new mongoose.Schema({
     type: { type: String, enum: ['JOB', 'COLLEGE'] },
     applicationId : Number,
     description: String,
+    status: String, 
     userId: { type: Number, ref: 'User', required: true },
     jobTitle: { type: String, required: function() { return this.type === 'JOB'; } },
     company: { type: String, required: function() { return this.type === 'JOB'; } },
@@ -142,12 +143,14 @@ const applicationSchema = new mongoose.Schema({
         of: String,
     },
     recommendationLetters: [String],
-    notifications: { type: Boolean, default: false }, // New field: notifications
+    notifications: { type: Boolean, default: true }, // New field: notifications
     deadlines: [{ // New field: deadlines (array of objects)
         name: String,
         date: Date
     }],
-    tasks: [String] // New field: tasks (array of strings)
+    tasks: [String], // New field: tasks (array of strings)
+    recruiters: [String], 
+    recommenders: [String], 
 });
 
 const Application = mongoose.model('Application', applicationSchema);
@@ -201,7 +204,7 @@ app.put('/application/:appId', async (req,res) => {
         }
         res.json(updatedApplication)
     } catch (error){
-        res.status.json({message: error.message});
+        res.status(404).json({message: error.message});
     }
 });
 

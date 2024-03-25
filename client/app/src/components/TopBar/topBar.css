@@ -23,7 +23,7 @@
     height: 100%; 
     width: 45%;
     display: flex; 
-    align-itmes: space-between; 
+    align-items: center; 
     gap: 1em;
     margin-right: 33%; 
 }

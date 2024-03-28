@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import cors from 'cors';
 import { Server } from "socket.io"; // Import Socket.io
 import { createServer } from "http"; // Import http module
-
+import Message from "./models/messageModel.js";
 import userRoutes from './routes/userRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
@@ -37,10 +37,46 @@ app.use('/application', applicationRoutes);
 
 // Socket.io event handling
 io.on("connection", (socket) => {
-    socket.on("join chat", ({ room, userId }) => { // Receive an object with room and userId
-        socket.join(room);
-        console.log(`User ${userId} Joined Room: ${room}`);
+
+    socket.on("setup", (userData) => {
+        socket.join(userData);
+        socket.emit("connected");
+      });
+
+
+    socket.on("join chat", ({ chatId, userId }) => { // Receive an object with chatId and userId
+        socket.join(chatId); // Join the room corresponding to the chatId
     });
+
+    socket.on("new message", (messageData) => {
+        // Broadcast the new message to all users in the chat room
+        console.log("Sending message to chat ID:", messageData.chatId);
+        console.log("Message data:", messageData);
+        
+
+        if (!messageData.users) return console.log("chat.users not defined");
+    
+        messageData.users.forEach((user) => {
+            console.log(user);
+          socket.in(user).emit("message recieved", messageData);
+        });        //abive line causing problems 
+        // Save the new message to the database
+        const message = new Message({
+            chat: messageData.chatId,
+            sender: messageData.sender,
+            content: messageData.content
+        });
+        
+        message.save()
+            .then(savedMessage => {
+              //  console.log('Message saved:', savedMessage);
+            })
+            .catch(error => {
+                console.error('Error saving message:', error);
+            });
+    });
+
+    
 });
 
 

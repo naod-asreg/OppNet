@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
+import {Conversation,ConversationHeader, Sidebar, ConversationList, ChatContainer, MainContainer, MessageList,MessageSeparator, Message} from "@chatscope/chat-ui-kit-react";
+import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 
 const ENDPOINT = "http://localhost:5555";
 var socket, selectedChatCompare;
 const user = JSON.parse(localStorage.getItem("user"));
 
 
-const Chat = ({ fetchAgain, setFetchAgain }) => {
+const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState();
@@ -142,36 +144,58 @@ const Chat = ({ fetchAgain, setFetchAgain }) => {
   };
 return (
   <div>
-      {/* Render list of chats */}
-      <ul>
-          {chats.map(chat => (
-              <li key={chat._id} onClick={() => setSelectedChat(chat)}>
-                  <span>{chat.name}</span>
-              </li>
-          ))}
-      </ul>
+    <MainContainer
+        responsive
+        style={{
+          height: "100vh",
+        }}
+    >
+    <Sidebar position="left">
+      <ConversationList>
+        {chats.map(chat => (
+          <Conversation
+            key={chat._id}
+            name={chat.name}
+            active= {true}
+            onClick={() => setSelectedChat(chat)}
+          >
+            
+          </Conversation>
+        ))}
+      </ConversationList>
+    </Sidebar>
 
       {/* Render messages for the selected chat */}
       {selectedChat && (
-          <div>
-              <h3>Messages:</h3>
-              <ul>
-                  {messages.map(message => (
-                      <li key={message._id}>
-                          <span>{message.sender}</span>: {message.content}
-                      </li>
-                  ))}
-              </ul>
-              {/* Input field to send new message */}
-              <input
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Type your message..."
-              />
-              <button onClick={sendMessage}>Send</button>
-          </div>
-      )}
+                    <><ChatContainer>
+                    <ConversationHeader>
+                        {/* Conversation header components */}
+                    </ConversationHeader>
+                    <MessageList>
+                        {messages.map((message) => (
+                            <React.Fragment key={message._id}>
+                                {<MessageSeparator content={message.timestamp} />}
+                                <Message
+                                    model={{
+                                        direction: message.sender === "Zoe" ? "incoming" : "outgoing",
+                                        message: message.content,
+                                        sender: message.sender,
+                                    }}
+                                >
+                                </Message>
+                            </React.Fragment>
+                        ))}
+                    </MessageList>
+                </ChatContainer><div>
+                        <input
+                            type="text"
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            placeholder="Type your message..." />
+                        <button onClick={sendMessage}>Send</button>
+                    </div></>
+        )}
+    </MainContainer>
   </div>
 );
 };

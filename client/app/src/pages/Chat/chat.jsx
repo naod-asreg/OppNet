@@ -20,7 +20,7 @@ import {
   InfoButton,
   ConversationList
 } from "@chatscope/chat-ui-kit-react";
-
+//change
 function Chat() {
   const user = JSON.parse(localStorage.getItem("user"));
   const socket = io.connect("http://localhost:5555"); // Connect to Socket.io server

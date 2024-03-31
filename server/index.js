@@ -36,49 +36,79 @@ app.use('/users', userRoutes);
 app.use('/application', applicationRoutes);
 
 // Socket.io event handling
+// io.on("connection", (socket) => {
+
+//     socket.on("setup", (userData) => {
+//         socket.join(userData);
+//         socket.emit("connected");
+//       });
+
+
+//     socket.on("join chat", ({ chatId, userId }) => { // Receive an object with chatId and userId
+//         socket.join(chatId); // Join the room corresponding to the chatId
+//     });
+
+//     socket.on("new message", (messageData) => {
+//         // Broadcast the new message to all users in the chat room
+//         console.log("Sending message to chat ID:", messageData.chatId);
+//         console.log("Message data:", messageData);
+        
+
+//         if (!messageData.users) return console.log("chat.users not defined");
+    
+//         messageData.users.forEach((user) => {
+//             console.log(user);
+//           socket.in(user).emit("message recieved", messageData);
+//         });        //abive line causing problems 
+//         // Save the new message to the database
+//         const message = new Message({
+//             chat: messageData.chatId,
+//             sender: messageData.sender,
+//             content: messageData.content
+//         });
+        
+//         message.save()
+//             .then(savedMessage => {
+//                console.log('Message saved:', savedMessage);
+//             })
+//             .catch(error => {
+//                 console.error('Error saving message:', error);
+//             });
+//     });
+
 io.on("connection", (socket) => {
-
+  console.log("Connected to socket.io");
+ 
     socket.on("setup", (userData) => {
-        socket.join(userData);
-        socket.emit("connected");
-      });
-
-
-    socket.on("join chat", ({ chatId, userId }) => { // Receive an object with chatId and userId
-        socket.join(chatId); // Join the room corresponding to the chatId
+      console.log(userData);
+      socket.join(userData.userId);
+      socket.emit("connected");
     });
+
+    socket.on("join chat", (room) => {
+      socket.join(room);
+      console.log("User Joined Room: " + room);
+    });
+socket.on("typing", (room) => socket.in(room).emit("typing"));
+socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
     socket.on("new message", (messageData) => {
-        // Broadcast the new message to all users in the chat room
-        console.log("Sending message to chat ID:", messageData.chatId);
-        console.log("Message data:", messageData);
-        
+      console.log(messageData);
+  
+      if (!messageData.users) return console.log("chat.users not defined");
 
-        if (!messageData.users) return console.log("chat.users not defined");
-    
-        messageData.users.forEach((user) => {
-            console.log(user);
-          socket.in(user).emit("message recieved", messageData);
-        });        //abive line causing problems 
-        // Save the new message to the database
-        const message = new Message({
-            chat: messageData.chatId,
-            sender: messageData.sender,
-            content: messageData.content
-        });
-        
-        message.save()
-            .then(savedMessage => {
-              //  console.log('Message saved:', savedMessage);
-            })
-            .catch(error => {
-                console.error('Error saving message:', error);
-            });
+      messageData.users.forEach((user) => {
+        if (user == messageData.sender) return;
+
+        socket.in(user).emit("message recieved", messageData);
+      });
     });
 
-    
+    socket.off("setup", () => {
+      console.log("USER DISCONNECTED");
+      socket.leave(userData._id);
+    });
 });
-
 
 // Start the server
 httpServer.listen(port, () => {

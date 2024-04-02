@@ -287,7 +287,7 @@ const Chat = () => {
                   </React.Fragment>
                 ))}
               </MessageList>
-              <MessageInput placeholder="Type message here"  onChange={(e) => setNewMessage(e)}onSend={sendMessage}/>
+              <MessageInput placeholder="Type message here"  onChange={(e) => setNewMessage(e)} onSend={sendMessage}/>
             </ChatContainer>
             {/*<div>
               <input

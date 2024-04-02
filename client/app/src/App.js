@@ -5,6 +5,8 @@ import Login from './pages/Login/Login';
 import Profile from './pages/Profile/Profile';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Home from './pages/Home/Home';
+
+import ChatTest from './pages/Chat/chat_test';
 import Chat from './pages/Chat/chat';
 
 
@@ -19,6 +21,7 @@ function App() {
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/home' element={<Home/>}/>
           <Route path='/chat' element={<Chat/>}/>
+          <Route path='/chatTest' element={<ChatTest/>}/>
         </Routes>
       </BrowserRouter>
     </GoogleOAuthProvider>

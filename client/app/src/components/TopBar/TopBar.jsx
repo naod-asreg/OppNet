@@ -11,6 +11,10 @@ function TopBar({ loggedIn }) {
     navigate("/login");
   };
 
+  const goChatTestPage = () => {
+    navigate("/chatTest")
+  }
+
   const goToChatPage = () => {
     navigate("/chat");
   };
@@ -24,7 +28,7 @@ function TopBar({ loggedIn }) {
         <div className="topBar_titles_title">
           <h4>Track Applications</h4>
         </div>
-        <div className="topBar_titles_title">
+        <div className="topBar_titles_title" onClick={goChatTestPage}>
           <h4>Connect</h4>
         </div>
         <div className="topBar_titles_title">

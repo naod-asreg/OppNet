@@ -1,11 +1,12 @@
-// NewEntryForm.js
 import React, { useState } from "react";
 import axios from 'axios';
+import './newEntryFrom.css';
 
-function NewEntryForm({ userId }) { // Change parameter name to userId (camelCase)
+function NewEntryForm({ userId }) {
+  const [showForm, setShowForm] = useState(false);
   const [entryType, setEntryType] = useState("");
   const [entryData, setEntryData] = useState({
-    userId: userId, // Correct the assignment to userId variable (remove quotes)
+    userId: userId,
     type: ""
   });
 
@@ -20,52 +21,55 @@ function NewEntryForm({ userId }) { // Change parameter name to userId (camelCas
     console.log("New Entry Data:", entryData);
 
     try {
-      // Post new entry data to the application
       await axios.post('http://localhost:5555/application', entryData);
       console.log("New entry submitted successfully");
     } catch (error) {
       console.error('Error submitting new entry:', error.message);
     }
 
-    // Reset form fields
+    setShowForm(false); // Hide the form after submission
     setEntryType("");
-    setEntryData({ userId: userId, type: "" }); // Reset entryData with correct userId value
+    setEntryData({ userId: userId, type: "" });
   };
 
   const handleChange = (e) => {
     setEntryData({ ...entryData, [e.target.name]: e.target.value });
   };
 
+  const handleAddEntryClick = () => {
+    setShowForm(true); // Show the form when "Add Entry" button is clicked
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Select entry type:
-        <select value={entryType} onChange={handleChangeType}>
-          <option value="">Select</option>
-          <option value="JOB">Job</option>
-          <option value="COLLEGE">College</option>
-        </select>
-      </label>
-      {entryType === "JOB" && (
-        <>
-          <label>
-            Job Title:
-            <input type="text" name="jobTitle" onChange={handleChange} />
-          </label>
-          <label>
-            Company:
-            <input type="text" name="company" onChange={handleChange} />
-          </label>
-        </>
+    <div className="new-entry-container">
+      {!showForm ? (
+        <button className="add-entry-button" onClick={handleAddEntryClick}>Add Entry</button>
+      ) : (
+        <form onSubmit={handleSubmit} className="new-entry-form">
+          <label htmlFor="entryType">Select entry type:</label>
+          <select id="entryType" value={entryType} onChange={handleChangeType}>
+            <option value="">Select</option>
+            <option value="JOB">Job</option>
+            <option value="COLLEGE">College</option>
+          </select>
+          {entryType === "JOB" && (
+            <>
+              <label htmlFor="jobTitle">Job Title:</label>
+              <input type="text" id="jobTitle" name="jobTitle" onChange={handleChange} />
+              <label htmlFor="company">Company:</label>
+              <input type="text" id="company" name="company" onChange={handleChange} />
+            </>
+          )}
+          {entryType === "COLLEGE" && (
+            <>
+              <label htmlFor="university">University:</label>
+              <input type="text" id="university" name="university" onChange={handleChange} />
+            </>
+          )}
+          <button type="submit" className="submit-button">Submit</button>
+        </form>
       )}
-      {entryType === "COLLEGE" && (
-        <label>
-          University:
-          <input type="text" name="university" onChange={handleChange} />
-        </label>
-      )}
-      <button type="submit">Submit</button>
-    </form>
+    </div>
   );
 }
 

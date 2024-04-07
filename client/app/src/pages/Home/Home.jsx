@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import EntryFocused from "../../components/EntryFocused/EntryFocused";
 import Button from "../../components/Button/Button";
+
 function Home() {
   const [applications, setApplications] = useState([]);
   const [focusedEntry, setFocusedEntry] = useState(null);
@@ -44,56 +45,26 @@ function Home() {
         <Sidebar />
 
         <div className="container mx-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="table">
+            <thead className="thead">
               <tr>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  #
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Job Position
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Company
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Location
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Status
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Expand
-                </th>
+                <th>#</th>
+                <th>Job Position</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Expand</th>
               </tr>
             </thead>
             <tbody>
               {applications.map((application) => (
               <tr key={application.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{application.applicationId}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.jobTitle}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.company}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.location}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.status}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{<Button content={"Expand"} color={"black"} onClick={() => openPopup(application)}/>}</td>
+                <td>{application.applicationId}</td>
+                <td>{application.jobTitle}</td>
+                <td>{application.company}</td>
+                <td>{application.location}</td>
+                <td>{application.status}</td>
+                <td><Button content="Expand" color="black" onClick={() => openPopup(application)}/></td>
               </tr>
             ))}
             </tbody>

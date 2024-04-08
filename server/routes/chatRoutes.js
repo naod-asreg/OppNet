@@ -68,6 +68,53 @@ router.post('/messages', async (req, res) => {
     }
 });
 
+//delete a user from a given chat
+router.delete('/:chatId', async (req, res) => {
+    try {
+        const { chatId } = req.params;
+        const { userId } = req.body;
+
+        // Find the chat by ID
+        const chat = await Chat.findById(chatId);
+
+        // Remove the user from the participants list
+        chat.participants.pull(userId);
+
+        // Save the updated chat
+        const updatedChat = await chat.save();
+
+        res.json(updatedChat);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+// Route to add a user to a chat
+router.put('/:chatId', async (req, res) => {
+    try {
+        const { chatId } = req.params;
+        const { userId } = req.body;
+
+        // Find the chat by ID
+        const chat = await Chat.findById(chatId);
+
+        // Add the user to the participants list if not already present
+        if (!chat.participants.includes(userId)) {
+            chat.participants.push(userId);
+        }
+
+        // Save the updated chat
+        const updatedChat = await chat.save();
+
+        res.json(updatedChat);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+
 
 
 // Route to update participants in a chat

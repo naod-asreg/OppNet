@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import io from "socket.io-client";
+import { CiCirclePlus, CiTrash } from "react-icons/ci";
+
 import {
   Conversation,
   ConversationHeader,
@@ -13,6 +15,8 @@ import {
   Message,
   Search,
   MessageInput,
+  Avatar,
+  InfoButton,
 } from "@chatscope/chat-ui-kit-react";
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import TopBar from "../../components/TopBar/TopBar";
@@ -32,10 +36,12 @@ const Chat = () => {
   const [notification, setNotification] = useState([]);
   const [chats, setChats] = useState([]);
 
-
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+
+  const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
+  const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
 
   useEffect(() => {
     const fetchAllUsers = async () => {
@@ -100,9 +106,6 @@ const Chat = () => {
     // Clean up function to close the socket connection when the component unmounts
     return () => {
       socket.disconnect();
-      socket.off("connected");
-      socket.off("typing");
-      socket.off("stop typing");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -167,10 +170,9 @@ const Chat = () => {
       );
       setFilteredUsers(filtered);
     } else {
-      setFilteredUsers(chats);
+      setFilteredUsers([]);
     }
   }, [searchQuery]);
-
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
@@ -206,13 +208,13 @@ const Chat = () => {
           name: `Chat between ${user.name} and ${clickedUser.name}`,
         }),
       });
-  
+
       if (response.ok) {
         const newChat = await response.json();
-  
+
         // Add the new chat to the list of chats
         setChats((prevChats) => [...prevChats, newChat]);
-  
+
         // Select the newly created chat
         setSelectedChat(newChat);
       } else {
@@ -222,10 +224,46 @@ const Chat = () => {
       console.error("Error creating chat:", error.message);
     }
   };
-  
+
+  const handleAddPeopleClick = () => {
+    setShowAddPeopleModal(true);
+  };
+
+  const handleUserSelect = (user) => {
+    const updatedSelectedUsers = [...selectedUsersToAdd, user];
+    setSelectedUsersToAdd(updatedSelectedUsers);
+  };
+
+  const handleAddPeopleToChat = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5555/chats/${selectedChat._id}/addUsers`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ users: selectedUsersToAdd }),
+        }
+      );
+      if (response.ok) {
+        // Handle success
+        // Close the modal
+        setShowAddPeopleModal(false);
+        // Fetch updated chat data
+        // Refresh chat data
+      } else {
+        // Handle error
+        console.error("Error adding people to chat:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error adding people to chat:", error.message);
+    }
+  };
+
   return (
     <div>
-      <TopBar/>
+      <TopBar />
       <MainContainer
         responsive
         style={{
@@ -233,23 +271,23 @@ const Chat = () => {
         }}
       >
         <Sidebar position="left">
-        <Search
+          <Search
             placeholder="Search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e)}
           />
-          <ConversationList>
-            {filteredUsers.map((user) => (
-              <Conversation
-                key={user._id}
-                name={user.name}
-                active={true}
-                onClick={
-                  () => handleUserClick(user)
-                }
-              ></Conversation>
-            ))}
-          </ConversationList>
+          {filteredUsers.length > 0 && (
+            <ConversationList>
+              {filteredUsers.map((user) => (
+                <Conversation
+                  key={user._id}
+                  name={user.name}
+                  active={true}
+                  onClick={() => handleUserClick(user)}
+                ></Conversation>
+              ))}
+            </ConversationList>
+          )}
           <ConversationList>
             {chats.map((chat) => (
               <Conversation
@@ -257,7 +295,14 @@ const Chat = () => {
                 name={chat.name}
                 active={true}
                 onClick={() => setSelectedChat(chat)}
-              ></Conversation>
+              >
+                <Avatar
+                  name={user.name}
+                  src={
+                    "https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+                  }
+                />
+              </Conversation>
             ))}
           </ConversationList>
         </Sidebar>
@@ -267,27 +312,72 @@ const Chat = () => {
           <>
             <ChatContainer>
               <ConversationHeader>
-              
-            <ConversationHeader.Content
-              userName={selectedChat.name}
-            />
+                <ConversationHeader.Content userName={selectedChat.name} />
+                <ConversationHeader.Actions>
+                  <CiCirclePlus size={40} onClick={handleAddPeopleClick} />
+
+                  {showAddPeopleModal && (
+                    <div className="modal">
+                      <div className="modal-content">
+                        <span
+                          className="close"
+                          onClick={() => setShowAddPeopleModal(false)}
+                        >
+                          &times;
+                        </span>
+                        <h2>Add People</h2>
+                        <Search
+                          placeholder="Search..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e)}
+                        />
+                        {filteredUsers.length > 0 && (
+                          <ConversationList>
+                            {filteredUsers.map((user) => (
+                              <Conversation
+                                key={user._id}
+                                name={user.name}
+                                active={true}
+                                onClick={() => handleUserSelect(user)}
+                              ></Conversation>
+                            ))}
+                          </ConversationList>
+                        )}
+                        <button onClick={handleAddPeopleToChat}>Add</button>
+                      </div>
+                    </div>
+                  )}
+                </ConversationHeader.Actions>
               </ConversationHeader>
               <MessageList>
                 {messages.map((message) => (
                   <React.Fragment key={message._id}>
-                    {<MessageSeparator content={message.timestamp} />}
+                    {/*<MessageSeparator content={new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} />*/}
                     <Message
                       model={{
                         direction:
-                          message.sender === "Zoe" ? "incoming" : "outgoing",
+                          user.userId === message.sender
+                            ? "outgoing"
+                            : "incoming",
                         message: message.content,
                         sender: message.sender,
                       }}
-                    ></Message>
+                    >
+                      {user.userId !== message.sender && (
+                        <Avatar
+                          name={message.sender}
+                          src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+                        />
+                      )}
+                    </Message>
                   </React.Fragment>
                 ))}
               </MessageList>
-              <MessageInput placeholder="Type message here"  onChange={(e) => setNewMessage(e)} onSend={sendMessage}/>
+              <MessageInput
+                placeholder="Type message here"
+                onChange={(e) => setNewMessage(e)}
+                onSend={sendMessage}
+              />
             </ChatContainer>
             {/*<div>
               <input

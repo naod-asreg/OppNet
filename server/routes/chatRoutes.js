@@ -68,4 +68,37 @@ router.post('/messages', async (req, res) => {
     }
 });
 
+
+
+// Route to update participants in a chat
+router.put('/:chatId/addUsers', async (req, res) => {
+    try {
+        const { chatId } = req.params;
+        const { users } = req.body;
+
+        // Validate that the chat exists
+        const existingChat = await Chat.findById(chatId);
+        if (!existingChat) {
+            return res.status(404).json({ message: "Chat not found." });
+        }
+
+        // Validate that each user exists before adding them to the chat
+        for (const userId of users) {
+            const userExists = await User.exists({ _id: userId });
+            if (!userExists) {
+                return res.status(400).json({ message: `User with ID ${userId} does not exist.` });
+            }
+        }
+
+        // Update the participants in the chat
+        await Chat.findByIdAndUpdate(chatId, { $addToSet: { participants: { $each: users } } });
+
+        res.status(200).json({ message: "Participants added successfully." });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+
 export default router;

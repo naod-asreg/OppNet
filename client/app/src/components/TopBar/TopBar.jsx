@@ -19,13 +19,17 @@ function TopBar({ loggedIn }) {
     navigate("/chat");
   };
 
+  const goToHome = () => { 
+    navigate("/home")
+  }
+
   return (
     <div className='topBar'>
       <div className="topBar_logo">
         <img src={Logo} alt="Logo" />
       </div>
       <div className="topBar_titles">
-        <div className="topBar_titles_title">
+        <div className="topBar_titles_title" onClick={goToHome}>
           <h4>Track Applications</h4>
         </div>
         <div className="topBar_titles_title" onClick={goChatTestPage}>

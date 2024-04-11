@@ -140,7 +140,7 @@ const Chat = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(messageData),
+          body: messageData,
         });
 
         if (response.ok) {

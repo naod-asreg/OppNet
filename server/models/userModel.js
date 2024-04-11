@@ -2,12 +2,11 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
     name: String,
-    userId : Number,
     username: String,
     email: String,
     password: String,
     university: String,
-    profilePicture: String
+    picture: String
 });
 
 const User = mongoose.model('User', userSchema);

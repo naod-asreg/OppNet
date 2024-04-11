@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import TopBar from "../../components/TopBar/TopBar";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import "./home.css";
@@ -7,10 +7,12 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import EntryFocused from "../../components/EntryFocused/EntryFocused";
 import Button from "../../components/Button/Button";
+import { UserContext } from "../../App";
 function Home() {
   const [applications, setApplications] = useState([]);
   const [focusedEntry, setFocusedEntry] = useState(null);
   const [isPopupOpen, setPopupOpen] = useState(false);
+
 
   const openPopup = (entry) => {
     setFocusedEntry(entry);
@@ -21,12 +23,13 @@ function Home() {
     setPopupOpen(false);
   };
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  let {currentUser} = useContext(UserContext)
 
   useEffect(() => {
+    console.log("Here is our user", currentUser)
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5555/application/${user.userId}`);
+        const response = await axios.get(`http://localhost:5555/application/${currentUser._id}`);
         setApplications(response.data);
       } catch (error) {
         console.error('Error fetching data:', error.message);
@@ -97,7 +100,7 @@ function Home() {
             ))}
             </tbody>
           </table>
-          <NewEntryForm userId={user.userId} />
+          <NewEntryForm userId={currentUser._id} />
         </div>
       </div>
 

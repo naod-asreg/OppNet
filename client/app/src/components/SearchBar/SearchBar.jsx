@@ -6,7 +6,7 @@ function SearchBar({style}) {
     <div className='SearchBar' style={style}>
       <input
         type='text'
-        placeholder='Enter your email'></input>
+        placeholder='Search Amazon Product Now'></input>
     </div>
   )
 }

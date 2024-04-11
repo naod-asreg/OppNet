@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import "./profile.css"
 import Sidebar from '../../components/Sidebar/Sidebar'
 import Headshot from "../../assets/headshot.jpeg";
@@ -6,25 +6,26 @@ import Button from '../../components/Button/Button';
 import { LuBell, LuHelpCircle, LuLock, LuPencil } from "react-icons/lu";
 import { GoGear } from "react-icons/go";
 import axios from 'axios'; // Import Axios for making HTTP requests
+import { UserContext } from '../../App';
 
 function Profile() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [firstName, setFirstName] = useState(user.name.split(" ")[0]);
-  const [lastName, setLastName] = useState(user.name.split(" ")[1]);
-  const [username, setUsername] = useState(user.username);
+  const {currentUser} = useContext(UserContext)
+  const [firstName, setFirstName] = useState(currentUser.name.split(" ")[0]);
+  const [lastName, setLastName] = useState(currentUser.name.split(" ")[1]);
+  const [username, setUsername] = useState("");
 
   const handleSave = () => {
     // Send a request to update user's information in the database
-    axios.put(`http://localhost:5555/users/${user.userId}`, {
+    axios.put(`http://localhost:5555/users/${currentUser._id}`, {
       name : firstName + " " + lastName,
       username, 
     })
     .then(response => {
       // Handle successful update
       console.log('User information updated successfully:', response.data);
-      user.name = firstName + " " + lastName;
-      user.username = username;
-      localStorage.setItem("user", JSON.stringify(user));
+      currentUser.name = firstName + " " + lastName;
+      currentUser.username = username;
+
     })
     .catch(error => {
       // Handle error
@@ -66,9 +67,9 @@ function Profile() {
             <div className="profile_section_content_edit">
               <div className="profile_section_content_edit_top">
                   <h1>Edit Profile</h1>
-                  <h3>{JSON.parse(localStorage.getItem("user")).name}</h3>
+                  <h3>{currentUser.name}</h3>
                   <div className="profile_section_content_edit_profileImg">
-                      <img src={JSON.parse(localStorage.getItem("user")).picture} alt=''/>
+                      <img src={currentUser.picture} alt=''/>
                   </div>
               </div>
 
@@ -87,7 +88,7 @@ function Profile() {
 
                   <div className="profile_section_content_edit_middle_email">
                         <label>Email</label>
-                        <input type={"text"} placeholder="abc@lehigh.edu" value={user.email}></input>
+                        <input type={"text"} placeholder="abc@lehigh.edu" value={currentUser.email}></input>
                   </div>
 
                   <div className="profile_section_content_edit_middle_email">

@@ -1,82 +1,52 @@
-import { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import "./login.css";
-import {useGoogleLogin} from "@react-oauth/google"
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
+import { UserContext } from "../../App";
 function Login() {
-  
-  const [user, setUser] = useState([]);
-  const [profile, setProfile] = useState([]);
-
+  const navigate = useNavigate();
+  const {setToken, setCurrentUser} = useContext(UserContext)
+  // Google OAuth login configuration
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => setUser(codeResponse),
-    onError: (error) => console.log("Login Failed:", error),
+    onSuccess: async (codeResponse) => {
+      try {
+        // Send Google OAuth access token to backend for validation
+
+        const response = await fetch(
+          "http://localhost:5555/users/google-auth",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              accessToken: JSON.stringify(codeResponse.access_token),
+            }),
+          }
+        );
+        // Assuming the backend returns a JWT token upon successful validation
+        let result = await response.json()
+        console.log(result)
+
+        const token = result.token
+        const user = result.user
+       
+
+        // Store the JWT token securely (e.g., in an HTTP-only cookie)
+        // For simplicity, let's assume storing it in local storage for now
+        setToken(token)
+        setCurrentUser(user)
+        // Redirect user to the home page
+        navigate("/home");
+      } catch (error) {
+        console.error("Google OAuth login failed:", error);
+        // Handle login failure (e.g., display error message to the user)
+      }
+    },
+    onError: (error) => console.error("Google OAuth login failed:", error),
   });
 
-  useEffect(() => {
-    if (profile.length !== 0) {
-     // localStorage.setItem("user", JSON.stringify(profile));
-
-      handleLoginAttempt();
-      console.log(profile); 
-    }
-  }, [profile]);
-
-  useEffect(() => {
-    if (user) {
-      axios
-        .get(
-          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              Accept: "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          setProfile(res.data);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [user]);
-  let navigate = useNavigate();
-
-  
-  async function handleLoginAttempt(e) {
-    try {
-      const adjustedProfile = {
-        name: profile.name,
-        email: profile.email,
-      };
-  
-      // Check if user exists by making a GET request to the backend endpoint
-      const userExistsResponse = await axios.get(`http://localhost:5555/users/${profile.email}`);
-      if (userExistsResponse.status === 200) { 
-        // User exists, extract userId from the response
-        const existingUser = userExistsResponse.data;
-        localStorage.setItem("user", JSON.stringify(existingUser)); // Store userId in localStorage
-        navigate("/home");
-      } 
-    } catch (error) {
-
-      if(error.response.status === 404){
-        const adjustedProfile = {
-          name: profile.name,
-          email: profile.email,
-        };
-        const response = await axios.post("http://localhost:5555/users", adjustedProfile);
-        const newUser = response.data; // New user object returned by the server
-        localStorage.setItem("user", JSON.stringify(newUser)); // Store userId in localStorage
-        navigate("/home");
-      }
-
-     console.log(error);
-    }
-  }
-  
- 
   return (
     <div className="login">
       <div className="login__illustration">
@@ -94,7 +64,7 @@ function Login() {
         <div className="input-area__inputs">
           <div className="inputs__label-input-card">
             <label>Username</label>
-            <input type={"text"} placeholder="abc123@lehigh.edu"></input>
+            <input type={"text"} placeholder="abc123@gmail.com"></input>
           </div>
           <div className="inputs__label-input-card">
             <label>Password</label>

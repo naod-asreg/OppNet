@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./sidebar.css";
 import Headshot from "../../assets/headshot.jpeg";
 import { IoHomeOutline } from "react-icons/io5";
 import { FaRegBell } from "react-icons/fa";
 import { MdOutlinePerson } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../App";
 
 function Sidebar() {
+  let {currentUser} = useContext(UserContext)
   let navigate = useNavigate()
   return (
     <div className="Sidebar">
       <div className="sidebar_top">
         <div className="sidebar_top_square">
-          <img src={JSON.parse(localStorage.getItem("user")).picture} alt=""/>
+          <img src={currentUser.picture} alt=""/>
         </div>
       </div>
       <div className="sidebar_buttons">

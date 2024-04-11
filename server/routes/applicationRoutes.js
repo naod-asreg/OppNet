@@ -1,10 +1,11 @@
 import express from "express";
 import Application from "../models/applicationModel.js";
 import Counter from "../models/counterModel.js";
+import { verifyToken } from "../authMidelware.js";
 const app = express.Router();
 
 // Create Application endpoint
-app.post('/', async (req, res) => {
+app.post('/', verifyToken, async (req, res) => {
     try {
         // Get the current sequence value for application ID
         let counter = await Counter.findById('applicationId');
@@ -15,7 +16,6 @@ app.post('/', async (req, res) => {
         }
 
         const applicationId = counter.sequenceValue;
-
         // Create a new application with the obtained application ID
         const newApplication = await Application.create({ ...req.body, applicationId });
         // Increment the sequence value for application ID in the counter schema
@@ -31,7 +31,7 @@ app.post('/', async (req, res) => {
 
 //get application based on userid
 //future changes will be toreturn only the metadata
-app.get('/:userId', async (req, res) => {
+app.get('/:userId', verifyToken, async (req, res) => {
     try {
         const {userId} = req.params;
         const applications = await Application.find({userId});
@@ -42,7 +42,7 @@ app.get('/:userId', async (req, res) => {
 });
 
 //Update Application endpoint
-app.put('/:appId', async (req,res) => {
+app.put('/:appId',verifyToken, async (req,res) => {
     try{
         const {appId} = req.params;
         const updatedApplication = await Application.findOneAndUpdate({applicationId : appId}, req.body, {new: true});

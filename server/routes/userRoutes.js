@@ -1,10 +1,70 @@
 import User from '../models/userModel.js'
 import express from "express";
 import Counter from "../models/counterModel.js";
+import { OAuth2Client } from 'google-auth-library';
+import {verifyToken} from '../authMidelware.js';
+import axios from 'axios'
+import jwt from "jsonwebtoken"
 // Create User endpoint
 const app = express.Router();
+const client = new OAuth2Client('176150502414-dl4hvgllhk6s6gndttt6c5t7d42afdar.apps.googleusercontent.com');
 
-app.post('/', async (req, res) => {
+
+const validateGoogleAccessToken = async (req, res, next) => {
+    try {
+      const { accessToken } = req.body;
+  
+      // Verify the Google OAuth access token with the Google OAuth client
+        const response = await axios
+          .get(
+            `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                Accept: "application/json",
+              },
+            }
+          )
+  
+      // Get user information from the verified token
+      const { name, email, picture} = response.data;
+
+      // Here, you can optionally check if the email exists in your database or perform any other checks
+      let user = await User.findOne({ email });
+
+      if (!user) {
+        // If user doesn't exist, create a new user in your database
+        user = new User({ name, email, picture});
+        await user.save();
+      }
+      // If validation is successful, generate a JWT token
+      const jwtToken = jwt.sign({ name, email }, 'your_secret_key', { expiresIn: '1h' });
+      // Send the JWT token back to the client
+      res.json({ token: jwtToken, user:user });
+    } catch (error) {
+      console.error('Google OAuth token validation failed:', error);
+      res.status(401).json({ message: 'Google OAuth token validation failed' });
+    }
+  };
+  
+  // Route for validating Google OAuth access token
+app.post('/google-auth', validateGoogleAccessToken);
+
+app.post('/login', async (req, res) => { 
+    try {
+      const {name, email} = req.body; 
+  
+      
+
+        res.json({ token });
+    }catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+      }
+  })
+  
+
+app.post('/', verifyToken, async (req, res) => {
     try {
         // Get the current sequence value for user ID
         let counter = await Counter.findById('userId');
@@ -29,7 +89,7 @@ app.post('/', async (req, res) => {
     }
 });
 // Get User endpointss
-app.get('/:email', async (req, res) => {
+app.get('/:email', verifyToken, async (req, res) => {
     try {
         const { email } = req.params; 
         const user = await User.findOne({ email });
@@ -58,7 +118,7 @@ app.get('/:email', async (req, res) => {
 // });
 
 // Delete User endpoint
-app.delete('/:userId', async (req, res) => {
+app.delete('/:userId', verifyToken, async (req, res) => {
     try {
         const { userId } = req.params;
         const deletedUser = await User.findOneAndDelete({ userId });
@@ -72,7 +132,7 @@ app.delete('/:userId', async (req, res) => {
 });
 
 // Update User endpoint
-app.put('/:userId', async (req, res) => {
+app.put('/:userId', verifyToken, async (req, res) => {
     try {
         const { userId } = req.params;
         const updatedUser = await User.findOneAndUpdate({ userId }, req.body, { new: true });
@@ -85,7 +145,7 @@ app.put('/:userId', async (req, res) => {
     }
 });
 
-app.get('/', async (req, res) => {
+app.get('/', verifyToken, async (req, res) => {
     try {
         const users = await User.find();
         res.json(users);

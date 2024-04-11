@@ -5,10 +5,11 @@ import bodyParser from "body-parser";
 import cors from 'cors';
 import { Server } from "socket.io"; // Import Socket.io
 import { createServer } from "http"; // Import http module
-import Message from "./models/messageModel.js";
 import userRoutes from './routes/userRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
+
+
 
 const app = express();
 const httpServer = createServer(app); // Create HTTP server
@@ -34,6 +35,7 @@ app.use(cors());
 app.use('/chats', chatRoutes);
 app.use('/users', userRoutes);
 app.use('/application', applicationRoutes);
+
 
 // Socket.io event handling
 // io.on("connection", (socket) => {
@@ -114,3 +116,4 @@ socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 httpServer.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+

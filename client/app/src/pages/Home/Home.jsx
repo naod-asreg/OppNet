@@ -3,7 +3,7 @@ import TopBar from "../../components/TopBar/TopBar";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import "./home.css";
 import NewEntryForm from "../../components/New Entry/NewEntryForm";
-import axios from 'axios';
+import axios from "axios";
 import { useEffect, useState } from "react";
 import EntryFocused from "../../components/EntryFocused/EntryFocused";
 import Button from "../../components/Button/Button";
@@ -12,7 +12,6 @@ function Home() {
   const [applications, setApplications] = useState([]);
   const [focusedEntry, setFocusedEntry] = useState(null);
   const [isPopupOpen, setPopupOpen] = useState(false);
-
 
   const openPopup = (entry) => {
     setFocusedEntry(entry);
@@ -23,16 +22,23 @@ function Home() {
     setPopupOpen(false);
   };
 
-  let {currentUser} = useContext(UserContext)
+  let { currentUser, token } = useContext(UserContext);
+  
 
   useEffect(() => {
-    console.log("Here is our user", currentUser)
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5555/application/${currentUser._id}`);
+        const response = await axios.get(
+          `http://localhost:5555/application/${currentUser._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setApplications(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error.message);
+        console.error("Error fetching data:", error.message);
       }
     };
 
@@ -89,15 +95,33 @@ function Home() {
             </thead>
             <tbody>
               {applications.map((application) => (
-              <tr key={application.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{application.applicationId}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.jobTitle}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.company}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.notifications? "ON": "OFF"}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.status}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{<Button content={"Expand"} color={"black"} onClick={() => openPopup(application)}/>}</td>
-              </tr>
-            ))}
+                <tr key={application.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {application.applicationId}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {application.jobTitle}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {application.company}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {application.notifications ? "ON" : "OFF"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {application.status}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {
+                      <Button
+                        content={"Expand"}
+                        color={"black"}
+                        onClick={() => openPopup(application)}
+                      />
+                    }
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
           <NewEntryForm userId={currentUser._id} />

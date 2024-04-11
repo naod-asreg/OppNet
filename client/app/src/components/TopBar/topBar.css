@@ -1,36 +1,71 @@
-.topBar { 
-    width: 100%; 
-    height: 3em; 
-    display: flex; 
-    align-items: center; 
-    border: 1px solid black; 
-}
-
-.topBar_logo{
-    width: 5%; 
-    height: 100%; 
-    
-}
-
-.topBar_logo img { 
-    position: relative; 
-    margin-left: 1rem; 
-    height: 100%; 
-    width: auto;
-}
-
-.topBar_titles { 
-    height: 100%; 
-    width: 45%;
-    display: flex; 
-    align-items: center; 
-    gap: 1em;
-    margin-right: 33%; 
-}
-
-.topBar_buttons { 
-    width: 11%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-}
+.topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ffffff; /* Background color */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow */
+  }
+  
+  .topBar_logo img {
+    height: 40px; /* Adjust logo height */
+  }
+  
+  .topBar_titles {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .topBar_titles_title {
+    font-size: 16px;
+    color: #333333; /* Text color */
+    cursor: pointer;
+    border: 1px solid transparent; /* Add border */
+    padding: 8px 12px; /* Add padding */
+    border-radius: 4px; /* Add border radius */
+  }
+  
+  .topBar_titles_title:hover {
+    color: #007bff; /* Hover color */
+    border-color: #007bff; /* Change border color on hover */
+  }
+  
+  .topBar_buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .topBar_button {
+    font-size: 16px; /* Match font size */
+    color: #333333;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .topBar_button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .modernButton {
+    background-color: #afb2af;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .modernButton:hover {
+    background-color: #45a049;
+  }
+  
+  .blackButton {
+    background-color: #333;
+  }
+  

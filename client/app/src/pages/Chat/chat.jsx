@@ -21,9 +21,9 @@ import {
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import TopBar from "../../components/TopBar/TopBar";
 
-const ENDPOINT = "http://localhost:5555";
-var socket, selectedChatCompare;
-const user = JSON.parse(localStorage.getItem("user"));
+// const ENDPOINT = "http://localhost:5555";
+// var socket, selectedChatCompare;
+// const user = JSON.parse(localStorage.getItem("user"));
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -71,9 +71,9 @@ const Chat = () => {
     fetchUserChats();
   }, [user]);
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      if (!selectedChat) return;
+//   useEffect(() => {
+//     const fetchMessages = async () => {
+//       if (!selectedChat) return;
 
       try {
         setLoading(true);
@@ -91,24 +91,24 @@ const Chat = () => {
       }
     };
 
-    fetchMessages();
-    selectedChatCompare = selectedChat;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedChat]);
+//     fetchMessages();
+//     selectedChatCompare = selectedChat;
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [selectedChat]);
 
-  useEffect(() => {
-    socket = io(ENDPOINT);
-    socket.emit("setup", user);
-    socket.on("connected", () => setSocketConnected(true));
-    socket.on("typing", () => setIsTyping(true));
-    socket.on("stop typing", () => setIsTyping(false));
+//   useEffect(() => {
+//     socket = io(ENDPOINT);
+//     socket.emit("setup", user);
+//     socket.on("connected", () => setSocketConnected(true));
+//     socket.on("typing", () => setIsTyping(true));
+//     socket.on("stop typing", () => setIsTyping(false));
 
-    // Clean up function to close the socket connection when the component unmounts
-    return () => {
-      socket.disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+//     // Clean up function to close the socket connection when the component unmounts
+//     return () => {
+//       socket.disconnect();
+//     };
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, []);
 
   useEffect(() => {
     socket.on("message recieved", (newMessageReceived) => {
@@ -177,7 +177,7 @@ const Chat = () => {
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
 
-    if (!socketConnected) return;
+//     if (!socketConnected) return;
 
     if (!typing) {
       setTyping(true);

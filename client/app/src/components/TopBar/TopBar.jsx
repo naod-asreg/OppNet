@@ -37,7 +37,7 @@ function TopBar({ loggedIn }) {
         </div>
         <div className="topBar_titles_title">
           {/* Make the "Chat" title a button */}
-          <Button content={'Chat'} onClick={goToChatPage} />
+          <h4>Chat</h4>
         </div>
         <div className="topBar_titles_title">
           <h4>More</h4>

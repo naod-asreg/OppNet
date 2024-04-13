@@ -28,6 +28,20 @@ app.post('/', async (req, res) => {
     }
 });
 
+// Delete Application endpoint
+app.delete('/:appId', async (req, res) => {
+    try {
+      const { appId } = req.params;
+      const deletedApplication = await Application.findOneAndDelete({ applicationId: appId });
+      if (!deletedApplication) {
+        return res.status(404).json({ message: 'Application not found' });
+      }
+      res.json(deletedApplication);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
 
 //get application based on userid
 //future changes will be toreturn only the metadata

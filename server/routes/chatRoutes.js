@@ -4,12 +4,14 @@ import Chat from "../models/chatModel.js";
 const router = express.Router();
 
 // Route to get all messages for a user
-router.get('/user/:userId', async (req, res) => {
+router.get('/user/:_id', async (req, res) => {
     try {
-        const { userId } = req.params;
         
-        const userChats = await Chat.find({ participants: userId }).populate('participants', 'name');
+        const { _id } = req.params;
+        console.log("User getting chats: ", _id)
         
+        const userChats = await Chat.find({ participants: _id }).populate('participants', 'name');
+        console.log("status: ",  userChats)
         res.json(userChats);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -32,6 +34,7 @@ router.get('/:chatId', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         // Extract chat data from the request body
+       
         const { participants, name } = req.body;
 
         // Create a new chat instance
@@ -51,9 +54,10 @@ router.post('/', async (req, res) => {
 // Route to create a new message
 router.post('/messages', async (req, res) => {
     try {
+        console.log(req.body)
         // Extract message data from the request body
         const { chat, sender, content } = req.body;
-
+    
         // Create a new message instance
         const newMessage = new Message({ chat, sender, content });
 
@@ -72,13 +76,13 @@ router.post('/messages', async (req, res) => {
 router.delete('/:chatId', async (req, res) => {
     try {
         const { chatId } = req.params;
-        const { userId } = req.body;
+        const { _id } = req.body;
 
         // Find the chat by ID
         const chat = await Chat.findById(chatId);
 
         // Remove the user from the participants list
-        chat.participants.pull(userId);
+        chat.participants.pull(_id);
 
         // Save the updated chat
         const updatedChat = await chat.save();
@@ -94,14 +98,14 @@ router.delete('/:chatId', async (req, res) => {
 router.put('/:chatId', async (req, res) => {
     try {
         const { chatId } = req.params;
-        const { userId } = req.body;
+        const { _id } = req.body;
 
         // Find the chat by ID
         const chat = await Chat.findById(chatId);
 
         // Add the user to the participants list if not already present
-        if (!chat.participants.includes(userId)) {
-            chat.participants.push(userId);
+        if (!chat.participants.includes(_id)) {
+            chat.participants.push(_id);
         }
 
         // Save the updated chat
@@ -130,10 +134,10 @@ router.put('/:chatId/addUsers', async (req, res) => {
         }
 
         // Validate that each user exists before adding them to the chat
-        for (const userId of users) {
-            const userExists = await User.exists({ _id: userId });
+        for (const _id of users) {
+            const userExists = await User.exists({ _id: _id });
             if (!userExists) {
-                return res.status(400).json({ message: `User with ID ${userId} does not exist.` });
+                return res.status(400).json({ message: `User with ID ${_id} does not exist.` });
             }
         }
 

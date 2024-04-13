@@ -17,7 +17,7 @@ const io = new Server(httpServer, {
     cors: {
       origin: "*",
       methods: ["GET", "POST", "PUT"],
-      allowedHeaders: ["my-custom-header"],
+      allowedHeaders: ["my-custom-header", "Authorization"],
       credentials: true
     }
   });
@@ -82,8 +82,8 @@ io.on("connection", (socket) => {
   console.log("Connected to socket.io");
  
     socket.on("setup", (userData) => {
-      console.log(userData);
-      socket.join(userData.userId);
+      console.log("setup: ", userData);
+      socket.join(userData._id);
       socket.emit("connected");
     });
 
@@ -95,14 +95,14 @@ socket.on("typing", (room) => socket.in(room).emit("typing"));
 socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
     socket.on("new message", (messageData) => {
-      console.log(messageData);
+      console.log("new message: ", messageData);
   
       if (!messageData.users) return console.log("chat.users not defined");
 
       messageData.users.forEach((user) => {
         if (user == messageData.sender) return;
 
-        socket.in(user).emit("message recieved", messageData);
+        socket.in(user).emit("message recieved: ", messageData);
       });
     });
 

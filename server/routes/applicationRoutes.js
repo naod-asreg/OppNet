@@ -7,6 +7,7 @@ const app = express.Router();
 // Create Application endpoint
 app.post('/', verifyToken, async (req, res) => {
     try {
+
         // Get the current sequence value for application ID
         let counter = await Counter.findById('applicationId');
 
@@ -24,6 +25,7 @@ app.post('/', verifyToken, async (req, res) => {
 
         res.status(201).json(newApplication);
     } catch (error) {
+        console.log(error.message)
         res.status(400).json({ message: error.message });
     }
 });
@@ -33,6 +35,7 @@ app.post('/', verifyToken, async (req, res) => {
 //future changes will be toreturn only the metadata
 app.get('/:userId', verifyToken, async (req, res) => {
     try {
+        console.log(req.params)
         const {userId} = req.params;
         const applications = await Application.find({userId});
         res.json(applications);

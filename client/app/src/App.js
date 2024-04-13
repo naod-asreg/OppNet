@@ -1,5 +1,5 @@
 import './App.css';
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import Landing from './pages/Landing/Landing';
 import Login from './pages/Login/Login';
 import Profile from './pages/Profile/Profile';
@@ -22,10 +22,15 @@ function App() {
         <Routes>
           <Route path='/' element={<Landing/>}/>
           <Route path='/login' element={<Login/>} />
-          <Route path='/profile' element={<Profile/>}/>
-          <Route path='/home' element={<Home/>}/>
-          <Route path='/chat' element={<Chat/>}/>
-          <Route path='/chatTest' element={<ChatTest/>}/>
+          {token && (
+            <>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/chatTest" element={<ChatTest />} />
+            </>
+          )}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </GoogleOAuthProvider>

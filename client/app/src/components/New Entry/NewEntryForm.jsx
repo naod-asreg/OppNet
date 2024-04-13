@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from 'axios';
 import './newEntryFrom.css';
+import { UserContext } from "../../App";
 
 // Sample JSON data for companies
 const companyData = [
@@ -21,6 +22,7 @@ const jobPositionData = [
 ];
 
 function NewEntryForm({ userId }) {
+  let { currentUser, token } = useContext(UserContext);
   const [showForm, setShowForm] = useState(false);
   const [entryType, setEntryType] = useState("");
   const [entryData, setEntryData] = useState({
@@ -44,7 +46,11 @@ function NewEntryForm({ userId }) {
     console.log("New Entry Data:", entryData);
 
     try {
-      await axios.post('http://localhost:5555/application', entryData);
+      await axios.post('http://localhost:5555/application', entryData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("New entry submitted successfully");
     } catch (error) {
       console.error('Error submitting new entry:', error.message);
@@ -94,9 +100,7 @@ function NewEntryForm({ userId }) {
     setShowForm(true); // Show the form when "Add Entry" button is clicked
   };
 
-  const handleAddEntryClick = () => {
-    setShowForm(true); // Show the form when "Add Entry" button is clicked
-  };
+ 
 
   return (
     <div className="new-entry-container">

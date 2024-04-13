@@ -14,6 +14,10 @@ function TopBar({ loggedIn }) {
     navigate("/chat");
   };
 
+  const goToHome = () => { 
+    navigate("/home")
+  }
+
   return (
     <div className='topBar'>
       <div className="topBar_logo">
@@ -21,7 +25,7 @@ function TopBar({ loggedIn }) {
       </div>
       <div className="topBar_titles">
         <div className="topBar_titles_title">
-          <button className="modernButton">Track Applications</button>
+          <button className="modernButton" onClick={goToHome}>Track Applications</button>
         </div>
         <div className="topBar_titles_title">
           <button className="modernButton">Connect</button>

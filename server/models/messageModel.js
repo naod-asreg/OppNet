@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const messageSchema = new Schema({
   chat: { type: Schema.Types.ObjectId, ref: 'Chat', required: true },
-  sender: { type: Number, ref: 'User', required: true },
+  sender: { type: String, ref: 'User', required: true },
   content: { type: String, required: true },
   timestamp: { type: Date, default: Date.now }
 });

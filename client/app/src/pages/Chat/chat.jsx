@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import io from "socket.io-client";
 import { CiCirclePlus, CiTrash } from "react-icons/ci";
@@ -20,12 +20,14 @@ import {
 } from "@chatscope/chat-ui-kit-react";
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import TopBar from "../../components/TopBar/TopBar";
+import { UserContext } from "../../App";
 
-// const ENDPOINT = "http://localhost:5555";
-// var socket, selectedChatCompare;
-// const user = JSON.parse(localStorage.getItem("user"));
+const ENDPOINT = "http://localhost:5555";
+var socket, selectedChatCompare;
+
 
 const Chat = () => {
+  const {currentUser} = useContext(UserContext)
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState();
@@ -43,11 +45,18 @@ const Chat = () => {
   const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
   const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
 
+  const {token} = useContext(UserContext)
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const response = await fetch(`http://localhost:5555/users`);
+        const response = await fetch(`http://localhost:5555/users`, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
+        console.log("Retrieved all users: ", data)
         setAllUsers(data);
       } catch (error) {
         console.error("Error fetching all users:", error.message);
@@ -60,7 +69,7 @@ const Chat = () => {
     const fetchUserChats = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5555/chats/user/${user.userId}`
+          `http://localhost:5555/chats/user/${currentUser._id}`
         ); // Fetch user's chats from backend
         const data = await response.json();
         setChats(data);
@@ -69,17 +78,22 @@ const Chat = () => {
       }
     };
     fetchUserChats();
-  }, [user]);
+  }, [currentUser]);
 
-//   useEffect(() => {
-//     const fetchMessages = async () => {
-//       if (!selectedChat) return;
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (!selectedChat) return;
 
       try {
         setLoading(true);
 
         const { data } = await axios.get(
-          `http://localhost:5555/chats/${selectedChat._id}`
+          `http://localhost:5555/chats/${selectedChat._id}`, 
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setMessages(data);
         setLoading(false);
@@ -91,24 +105,24 @@ const Chat = () => {
       }
     };
 
-//     fetchMessages();
-//     selectedChatCompare = selectedChat;
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, [selectedChat]);
+    fetchMessages();
+    selectedChatCompare = selectedChat;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedChat]);
 
-//   useEffect(() => {
-//     socket = io(ENDPOINT);
-//     socket.emit("setup", user);
-//     socket.on("connected", () => setSocketConnected(true));
-//     socket.on("typing", () => setIsTyping(true));
-//     socket.on("stop typing", () => setIsTyping(false));
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", currentUser);
+    socket.on("connected", () => setSocketConnected(true));
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
 
-//     // Clean up function to close the socket connection when the component unmounts
-//     return () => {
-//       socket.disconnect();
-//     };
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, []);
+    // Clean up function to close the socket connection when the component unmounts
+    return () => {
+      socket.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     socket.on("message recieved", (newMessageReceived) => {
@@ -132,15 +146,16 @@ const Chat = () => {
         const messageData = {
           content: newMessage,
           chat: selectedChat._id,
-          sender: user.userId,
+          sender: currentUser._id,
         };
 
+        console.log("Message data we are sending: ", messageData)
         const response = await fetch("http://localhost:5555/chats/messages", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: messageData,
+          body: JSON.stringify(messageData)
         });
 
         if (response.ok) {
@@ -177,7 +192,7 @@ const Chat = () => {
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
 
-//     if (!socketConnected) return;
+    if (!socketConnected) return;
 
     if (!typing) {
       setTyping(true);
@@ -204,8 +219,8 @@ const Chat = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          participants: [user.userId, clickedUser.userId],
-          name: `Chat between ${user.name} and ${clickedUser.name}`,
+          participants: [currentUser._id, clickedUser._id],
+          name: `Chat between ${currentUser.name} and ${clickedUser.name}`,
         }),
       });
 
@@ -230,7 +245,7 @@ const Chat = () => {
   };
 
   const handleUserSelect = (user) => {
-    const updatedSelectedUsers = [...selectedUsersToAdd, user];
+    const updatedSelectedUsers = [...selectedUsersToAdd, currentUser];
     setSelectedUsersToAdd(updatedSelectedUsers);
   };
 
@@ -297,7 +312,7 @@ const Chat = () => {
                 onClick={() => setSelectedChat(chat)}
               >
                 <Avatar
-                  name={user.name}
+                  name={currentUser.name}
                   src={
                     "https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
                   }
@@ -356,14 +371,14 @@ const Chat = () => {
                     <Message
                       model={{
                         direction:
-                          user.userId === message.sender
+                          currentUser._id === message.sender
                             ? "outgoing"
                             : "incoming",
                         message: message.content,
                         sender: message.sender,
                       }}
                     >
-                      {user.userId !== message.sender && (
+                      {currentUser._id !== message.sender && (
                         <Avatar
                           name={message.sender}
                           src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"

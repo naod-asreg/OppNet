@@ -32,7 +32,7 @@ function Home() {
           `http://localhost:5555/application/${currentUser._id}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `${token}`,
             },
           }
         );
@@ -43,7 +43,7 @@ function Home() {
     };
 
     fetchData();
-  }, [applications]);
+  }, [applications, currentUser._id, token]);
 
   return (
     <div className="Home">

@@ -4,7 +4,7 @@ const applicationSchema = new mongoose.Schema({
     type: { type: String, enum: ['JOB', 'COLLEGE'] },
     applicationId : Number,
     description: String,
-    userId: { type: Number, ref: 'User', required: true },
+    userId: { type: String, ref: 'User', required: true },
     jobTitle: { type: String, required: function() { return this.type === 'JOB'; } },
     company: { type: String, required: function() { return this.type === 'JOB'; } },
     university: { type: String, required: function() { return this.type === 'COLLEGE'; } },

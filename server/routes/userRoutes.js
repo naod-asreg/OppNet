@@ -20,7 +20,7 @@ const validateGoogleAccessToken = async (req, res, next) => {
             `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
             {
               headers: {
-                Authorization: `Bearer ${accessToken}`,
+                Authorization: `${accessToken}`,
                 Accept: "application/json",
               },
             }
@@ -38,7 +38,7 @@ const validateGoogleAccessToken = async (req, res, next) => {
         await user.save();
       }
       // If validation is successful, generate a JWT token
-      const jwtToken = jwt.sign({ name, email }, 'your_secret_key', { expiresIn: '1h' });
+      const jwtToken = jwt.sign({user}, 'ilias', { expiresIn: '1h' });
       // Send the JWT token back to the client
       res.json({ token: jwtToken, user:user });
     } catch (error) {

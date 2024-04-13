@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const chatSchema = new Schema({
-    participants: [{ type: Number, required: true }], // Assuming there's a User model
+    participants: [{ type: String, required: true }], // Assuming there's a User model
     name: { type: String, required: true }
 });
 

@@ -6,7 +6,7 @@ import Profile from './pages/Profile/Profile';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Home from './pages/Home/Home';
 
-import ChatTest from './pages/Chat/chat_test';
+
 import Chat from './pages/Chat/chat';
 import { createContext, useState } from 'react';
 
@@ -27,7 +27,6 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/home" element={<Home />} />
               <Route path="/chat" element={<Chat />} />
-              <Route path="/chatTest" element={<ChatTest />} />
             </>
           )}
           <Route path="*" element={<Navigate to="/" />} />

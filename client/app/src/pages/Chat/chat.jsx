@@ -11,14 +11,12 @@ import {
   ChatContainer,
   MainContainer,
   MessageList,
-  MessageSeparator,
   Message,
   Search,
   MessageInput,
   Avatar,
-  InfoButton,
-} from "@chatscope/chat-ui-kit-react";
-import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+} from '@chatscope/chat-ui-kit-react';
+import styles from '@chatscope/chat-ui-kit-styles';
 import TopBar from "../../components/TopBar/TopBar";
 import { UserContext } from "../../App";
 

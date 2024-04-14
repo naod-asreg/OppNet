@@ -84,7 +84,7 @@ const Chat = () => {
     const fetchMessages = async () => {
       if (!selectedChat) return;
 
-      try {
+      try {//s
         setLoading(true);
 
         const { data } = await axios.get(

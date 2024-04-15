@@ -9,7 +9,6 @@ const companyData = [
   { id: 2, name: "Amazon" },
   { id: 3, name: "Microsoft" },
   { id: 4, name: "Google" }
-  
 ];
 
 // Sample JSON data for job positions
@@ -43,19 +42,23 @@ function NewEntryForm({ userId }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("New Entry Data:", entryData);
-
+   //console.log("New Entry Data:", entryData);
+    
     try {
-      await axios.post('http://localhost:5555/application', entryData, {
+      const response = await axios.post('http://localhost:5555/application', entryData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `${token}`,
         },
       });
-      console.log("New entry submitted successfully");
+    //  console.log("New entry submitted successfully");
+     // console.log(response);
+      if(response.status === 201){
+        createOrAddGroupChat();
+      }
     } catch (error) {
       console.error('Error submitting new entry:', error.message);
     }
-
+    
     setShowForm(false); // Hide the form after submission
     setEntryType("");
     setEntryData({ userId: userId, type: "", jobTitle: "", company: "", university: "" });
@@ -63,12 +66,66 @@ function NewEntryForm({ userId }) {
     setCompanySuggestions([]); // Clear suggestions
   };
 
+  const createOrAddGroupChat = async () => {
+    try {
+      // Extract entry data
+      const { company, jobTitle, university} = entryData;
+  
+      let existingGroupChatData;
+      // Check if the group chat exists for company
+      if (company) {
+        const existingGroupChat = await fetch(`http://localhost:5555/chats/group/${company}_${jobTitle}`);
+        existingGroupChatData = await existingGroupChat.json();
+      } 
+      // Check if the group chat exists for university
+      else if (university) {
+        const existingGroupChat = await fetch(`http://localhost:5555/chats/group/${university}`);
+        existingGroupChatData = await existingGroupChat.json();
+      }
+     
+      if (existingGroupChatData.message === 'Group chat not found.') {
+        // Group chat doesn't exist, create a new chat
+        const newChat = {
+          participants: [userId],
+          name: company ? `${company}_${jobTitle}` : university
+        };
+  
+        const createdChat = await fetch('http://localhost:5555/chats/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newChat)
+        });
+  
+        const createdChatData = await createdChat.json();
+        return createdChatData;
+      } else {
+        // Group chat exists, add user to the chat
+        const updatedGroupChat = await fetch(`http://localhost:5555/chats/${existingGroupChatData._id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ _id: userId })
+        });
+  
+        const updatedGroupChatData = await updatedGroupChat.json();
+        return updatedGroupChatData;
+      }
+    } catch (error) {
+      console.error("Error creating or adding group chat:", error.message);
+      throw error;
+    }
+  };
+  
+  
   const handleJobTitle = (e) => {
     const userInput = e.target.value;
     setEntryData({ ...entryData, jobTitle: userInput });
     const filteredJobTitleSuggestions = jobPositionData.filter(job =>
       job.title.toLowerCase().startsWith(userInput.toLowerCase())
-    ).slice(0, 10); // Limit suggestions to 10
+    ).slice(0, 10); 
     setJobTitleSuggestions(filteredJobTitleSuggestions);
   }
 

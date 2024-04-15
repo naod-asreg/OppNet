@@ -16,7 +16,7 @@ import {
   MessageInput,
   Avatar,
 } from '@chatscope/chat-ui-kit-react';
-import styles from '@chatscope/chat-ui-kit-styles';
+import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import TopBar from "../../components/TopBar/TopBar";
 import { UserContext } from "../../App";
 
@@ -50,7 +50,7 @@ const Chat = () => {
         const response = await fetch(`http://localhost:5555/users`, 
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
           },
         });
         const data = await response.json();
@@ -89,7 +89,7 @@ const Chat = () => {
           `http://localhost:5555/chats/${selectedChat._id}`, 
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `${token}`,
             },
           }
         );

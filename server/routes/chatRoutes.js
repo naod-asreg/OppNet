@@ -116,11 +116,6 @@ router.put('/:chatId', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-
-
-
-
-
 // Route to update participants in a chat
 router.put('/:chatId/addUsers', async (req, res) => {
     try {
@@ -150,6 +145,24 @@ router.put('/:chatId/addUsers', async (req, res) => {
     }
 });
 
+router.get('/group/:name', async (req, res) => {
+    try {
+        // Extract chat name from the URL parameter
+        const { name } = req.params;
+
+        // Check if a group chat with the given name already exists
+        const existingChat = await Chat.findOne({ name });
+
+        if (existingChat) {
+            return res.status(200).json(existingChat);
+        } else {
+            return res.status(404).json({ message: "Group chat not found." });
+        }
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ message: error.message });
+    }
+});
 
 
 export default router;

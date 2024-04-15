@@ -35,7 +35,7 @@ app.post('/', verifyToken, async (req, res) => {
 //future changes will be toreturn only the metadata
 app.get('/:userId', verifyToken, async (req, res) => {
     try {
-        console.log(req.params)
+     //   console.log(req.params)
         const {userId} = req.params;
         const applications = await Application.find({userId});
         res.json(applications);

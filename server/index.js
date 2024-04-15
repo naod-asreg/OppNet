@@ -28,7 +28,7 @@ mongoose.connect(mongoURL)
         console.log(error);
     });
 
-// Middleware to parse JSON bodies
+// Middaleware to parse JSON bodies
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -36,47 +36,6 @@ app.use('/chats', chatRoutes);
 app.use('/users', userRoutes);
 app.use('/application', applicationRoutes);
 
-
-// Socket.io event handling
-// io.on("connection", (socket) => {
-
-//     socket.on("setup", (userData) => {
-//         socket.join(userData);
-//         socket.emit("connected");
-//       });
-
-
-//     socket.on("join chat", ({ chatId, userId }) => { // Receive an object with chatId and userId
-//         socket.join(chatId); // Join the room corresponding to the chatId
-//     });
-
-//     socket.on("new message", (messageData) => {
-//         // Broadcast the new message to all users in the chat room
-//         console.log("Sending message to chat ID:", messageData.chatId);
-//         console.log("Message data:", messageData);
-        
-
-//         if (!messageData.users) return console.log("chat.users not defined");
-    
-//         messageData.users.forEach((user) => {
-//             console.log(user);
-//           socket.in(user).emit("message recieved", messageData);
-//         });        //abive line causing problems 
-//         // Save the new message to the database
-//         const message = new Message({
-//             chat: messageData.chatId,
-//             sender: messageData.sender,
-//             content: messageData.content
-//         });
-        
-//         message.save()
-//             .then(savedMessage => {
-//                console.log('Message saved:', savedMessage);
-//             })
-//             .catch(error => {
-//                 console.error('Error saving message:', error);
-//             });
-//     });
 
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");

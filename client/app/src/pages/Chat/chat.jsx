@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import io from "socket.io-client";
-import { CiCirclePlus, CiTrash } from "react-icons/ci";
+import { CiCircleMinus, CiTrash } from "react-icons/ci";
 
 import {
   Conversation,
@@ -40,8 +40,8 @@ const Chat = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
 
-  const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
-  const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
+  const [showLeaveScreen, setLeaveScreen] = useState(false);
+
 
   const {token} = useContext(UserContext)
   useEffect(() => {
@@ -238,42 +238,23 @@ const Chat = () => {
     }
   };
 
-  const handleAddPeopleClick = () => {
-    setShowAddPeopleModal(true);
+  const handleClick = () => {
+    setLeaveScreen(true);
   };
 
-  const handleUserSelect = (user) => {
-    const updatedSelectedUsers = [...selectedUsersToAdd, currentUser];
-    setSelectedUsersToAdd(updatedSelectedUsers);
-  };
-
-  const handleAddPeopleToChat = async () => {
+  const handleCloseModal = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5555/chats/${selectedChat._id}/addUsers`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ users: selectedUsersToAdd }),
-        }
-      );
-      if (response.ok) {
-        // Handle success
-        // Close the modal
-        setShowAddPeopleModal(false);
-        // Fetch updated chat data
-        // Refresh chat data
-      } else {
-        // Handle error
-        console.error("Error adding people to chat:", response.statusText);
-      }
+      console.log(currentUser._id);
+      await axios.delete(`http://localhost:5555/chats/${selectedChat._id}`, { data: { _id: currentUser._id}});
+      setLeaveScreen(false);
+      
+      // Remove the deleted chat from the chats state
+      setChats(prevChats => prevChats.filter(chat => chat._id !== selectedChat._id));
     } catch (error) {
-      console.error("Error adding people to chat:", error.message);
+      console.error('Error:', error);
     }
   };
-
+  
   return (
     <div>
       <TopBar />
@@ -327,36 +308,15 @@ const Chat = () => {
               <ConversationHeader>
                 <ConversationHeader.Content userName={selectedChat.name} />
                 <ConversationHeader.Actions>
-                  <CiCirclePlus size={40} onClick={handleAddPeopleClick} />
-
-                  {showAddPeopleModal && (
-                    <div className="modal">
-                      <div className="modal-content">
-                        <span
-                          className="close"
-                          onClick={() => setShowAddPeopleModal(false)}
-                        >
-                          &times;
-                        </span>
-                        <h2>Add People</h2>
-                        <Search
-                          placeholder="Search..."
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e)}
-                        />
-                        {filteredUsers.length > 0 && (
-                          <ConversationList>
-                            {filteredUsers.map((user) => (
-                              <Conversation
-                                key={user._id}
-                                name={user.name}
-                                active={true}
-                                onClick={() => handleUserSelect(user)}
-                              ></Conversation>
-                            ))}
-                          </ConversationList>
-                        )}
-                        <button onClick={handleAddPeopleToChat}>Add</button>
+                <CiCircleMinus size={40} onClick={handleClick} />
+                  {showLeaveScreen && (
+                    <div className="modal-overlay">
+                      <div className="popup-box">
+                        {/* Your pop-up screen content goes here */}
+                        <div className="popup-content">
+                          Are you sure you want to leave the groupchat?
+                          <button onClick={handleCloseModal}>Leave</button>
+                        </div>
                       </div>
                     </div>
                   )}

@@ -77,7 +77,7 @@ router.delete('/:chatId', async (req, res) => {
     try {
         const { chatId } = req.params;
         const { _id } = req.body;
-
+        console.log(chatId,req.body);
         // Find the chat by ID
         const chat = await Chat.findById(chatId);
 

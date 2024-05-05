@@ -21,7 +21,11 @@ const applicationSchema = new mongoose.Schema({
         name: String,
         date: Date
     }],
-    tasks: [String] // New field: tasks (array of strings)
+    tasks: [String], // New field: tasks (array of strings)
+    jobType: String,
+    status: String,
+    recruiter: [String],
+    
 });
 
 const Application = mongoose.model('Application', applicationSchema);

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import io from "socket.io-client";
 import { CiCirclePlus, CiTrash } from "react-icons/ci";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 import {
   Conversation,
@@ -19,13 +20,14 @@ import {
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import TopBar from "../../components/TopBar/TopBar";
 import { UserContext } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 const ENDPOINT = "http://localhost:5555";
 var socket, selectedChatCompare;
 
 
 const Chat = () => {
-  const {currentUser} = useContext(UserContext)
+  const {currentUser,token} = useContext(UserContext)
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState();
@@ -43,7 +45,21 @@ const Chat = () => {
   const [showAddPeopleModal, setShowAddPeopleModal] = useState(false);
   const [selectedUsersToAdd, setSelectedUsersToAdd] = useState([]);
 
-  const {token} = useContext(UserContext)
+
+  const getUserPicture = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:5555/users/picture/${userId}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      });
+      console.log("response: ", response)
+      return response.data.picture; // Assuming the response contains the user's picture
+    } catch (error) {
+      console.error("Error fetching user's picture:", error);
+      return ""; // Return empty string in case of error
+    }
+  };
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
@@ -237,9 +253,9 @@ const Chat = () => {
       console.error("Error creating chat:", error.message);
     }
   };
-
+  let navigate = useNavigate()
   const handleAddPeopleClick = () => {
-    setShowAddPeopleModal(true);
+    navigate('/home')
   };
 
   const handleUserSelect = (user) => {
@@ -276,11 +292,12 @@ const Chat = () => {
 
   return (
     <div>
-      <TopBar />
+     
       <MainContainer
         responsive
         style={{
           height: "100vh",
+          color: 'black'
         }}
       >
         <Sidebar position="left">
@@ -293,11 +310,17 @@ const Chat = () => {
             <ConversationList>
               {filteredUsers.map((user) => (
                 <Conversation
+                  
                   key={user._id}
                   name={user.name}
                   active={true}
                   onClick={() => handleUserClick(user)}
-                ></Conversation>
+                ><Avatar
+                name={user.name}
+                src={
+                  user.picture
+                }
+              /></Conversation>
               ))}
             </ConversationList>
           )}
@@ -312,7 +335,7 @@ const Chat = () => {
                 <Avatar
                   name={currentUser.name}
                   src={
-                    "https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+                    currentUser.picture
                   }
                 />
               </Conversation>
@@ -327,7 +350,7 @@ const Chat = () => {
               <ConversationHeader>
                 <ConversationHeader.Content userName={selectedChat.name} />
                 <ConversationHeader.Actions>
-                  <CiCirclePlus size={40} onClick={handleAddPeopleClick} />
+                  <IoMdArrowRoundBack size={40} onClick={handleAddPeopleClick} />
 
                   {showAddPeopleModal && (
                     <div className="modal">
@@ -379,7 +402,9 @@ const Chat = () => {
                       {currentUser._id !== message.sender && (
                         <Avatar
                           name={message.sender}
-                          src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+                          src={getUserPicture(message.sender)}
+                          // Placeholder image in case fetching the user's picture fails or is not available
+                          fallbackSrc="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
                         />
                       )}
                     </Message>

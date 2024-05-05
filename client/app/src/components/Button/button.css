@@ -1,8 +1,26 @@
-.Button { 
-    width: 3.8rem; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    border: 1px solid black; 
-    padding: 0.4em; 
-}
+
+.Button {
+    width: 3.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    padding: 0.4em;
+    border-radius: 20px;
+    background-color: transparent; 
+    color: black;
+    transition: background-color 0.3s ease, color 0.3s ease; 
+    cursor: pointer;
+  }
+  
+  /* Hover effect */
+  .Button:hover {
+    background-color: black; 
+    color: white; 
+  }
+  
+
+  .Button:active {
+    transform: translateY(1px); 
+  }
+  

@@ -1,4 +1,4 @@
-/* Add your custom CSS styles for enhanced visuals here */
+
 .home_content {
   display:flex;
 }
@@ -7,21 +7,59 @@
   width: 100%;
   margin: 0 auto;
 }
-
-table {
+.table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-th, td {
-  padding: 10px;
-  border: 1px solid #ccc;
+.th, .td {
+  padding: 16px;
   text-align: left;
+  font-size: 16px;
+  border-bottom: 1px solid #eaeaea;
 }
 
-th {
-  background-color: #f2f2f2;
+.th {
+  background-color: #fff;
+  color: #333;
+  font-weight: 600;
+  text-transform: uppercase;
 }
+
+.tr:hover {
+  background-color: #f5f5f5;
+}
+
+.icon {
+  padding-left: 16px;
+}
+
+.status-icon {
+  height: 10px;
+  width: 10px;
+  background-color: blue; 
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.title, .description, .company {
+  font-weight: 500;
+}
+
+.view-details .details-button {
+  background-color: #000;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.details-button:hover {
+  background-color: #555;
+}
+
 
 .popup-background {
   position: fixed;
@@ -33,5 +71,64 @@ th {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.home_content_top { 
+  padding: 15px 0; 
+  height: 20%; 
+  background: #D4D3D1;
+  border: 1px solid grey;
+  border-left: none; 
+}
+
+.home_content_titles { 
+  margin: 0.1rem 1rem; 
+}
+.home_content_titles > * { 
+  margin: 0; 
+}
+.home_content_top_filter_section{
+  margin-top: 1rem; 
+}
+.home_content_top_filter_section_subtitle{
+  margin: 0 1rem; 
+}
+.home_content_top_filter_section_title { 
+  display: flex; 
+  gap: 0.3rem; 
+  align-items: center; 
+  margin: 0 1rem; 
+}
+.home_content_top_filter_section_filters{
+  margin: 0 1rem;
+  margin-top: 1.3rem; 
+  display: flex;
+  gap: 1rem;
+}
+.dropdown-nav {
+  width: 15%;
+  height: 2.3rem; 
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 16px;
+  line-height: 1.3;
+  appearance: none; 
+  background-color: #fff;
+  background-image: linear-gradient(45deg, transparent 50%, #2d2f31 50%), linear-gradient(135deg, #2d2f31 50%, transparent 50%);
+  background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  outline: none; 
+}
+
+.dropdown-nav:hover, .dropdown-nav:focus {
+  border-color: #777;
+}
+
+.dropdown-nav option {
+  font-size: 16px;
+  padding: 10px;
 }
 

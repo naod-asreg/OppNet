@@ -1,0 +1,52 @@
+/* Custom styles for Chat UI components */
+
+/* Conversation Header */
+.ConversationHeader__Content {
+    color: black; /* Black text */
+  }
+  
+  /* Sidebar */
+  .Sidebar {
+    background-color: white; /* White background */
+  }
+  
+  /* Conversation List */
+  .ConversationList {
+    background-color: white; /* White background */
+  }
+  
+  /* Conversation Item */
+  .ConversationItem {
+    color: black; /* Black text */
+  }
+  
+  /* Chat Container */
+  .ChatContainer {
+    background-color: white; /* White background */
+  }
+  
+  /* Message List */
+  .MessageList {
+    color: black; /* Black text */
+  }
+  
+  /* Message Input */
+  .MessageInput {
+    background-color: white; /* White background */
+    color: black; /* Black text */
+    border-color: black; /* Black border */
+  }
+  
+  /* Search Input */
+  .Search__Input {
+    background-color: white; /* White background */
+    color: black; /* Black text */
+  }
+  
+  /* Avatar */
+  .Avatar {
+    border-color: black; /* Black border */
+  }
+  
+  /* Add more custom styles as needed... */
+  

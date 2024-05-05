@@ -115,7 +115,30 @@ app.get('/:email', verifyToken, async (req, res) => {
 //     } catch (error) {
 //         res.status(400).json({ message: error.message });
 //     }
-// });
+// })
+
+// Get User by UserId endpoint
+// Get User Picture by UserId endpoint
+app.get('/picture/:userId', verifyToken, async (req, res) => {
+    try {
+        const { userId } = req.params;
+        
+        // Assuming userId is a unique identifier in your User model
+        const user = await User.findOne({ userId });
+
+        if (!user) {
+            console.log("not found")
+            return res.status(404).json({ message: 'User not found' });
+        }
+    
+        // Return only the user's picture
+        res.json({ picture: user.picture });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+
 
 // Delete User endpoint
 app.delete('/:userId', verifyToken, async (req, res) => {

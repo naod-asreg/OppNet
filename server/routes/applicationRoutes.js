@@ -58,6 +58,21 @@ app.put('/:appId',verifyToken, async (req,res) => {
     }
 });
 
+app.delete('/:appId',verifyToken, async (req, res) => {
+    try {
+      const { appId } = req.params;
+      
+      const deletedApplication = await Application.findOneAndDelete({ applicationId: Number(appId) });
+      console.log(deletedApplication)
+      if (!deletedApplication) {
+        return res.status(404).json({ message: 'Application not found' });
+      }
+      res.json(deletedApplication);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  });
 export default app;
+
 
 

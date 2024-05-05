@@ -8,6 +8,7 @@ import { createServer } from "http"; // Import http module
 import userRoutes from './routes/userRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
+import eventRoutes from './routes/eventRoutes.js'
 
 
 
@@ -35,7 +36,7 @@ app.use(cors());
 app.use('/chats', chatRoutes);
 app.use('/users', userRoutes);
 app.use('/application', applicationRoutes);
-
+app.use('/events', eventRoutes)
 
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");

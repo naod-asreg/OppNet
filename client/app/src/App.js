@@ -9,6 +9,9 @@ import Home from './pages/Home/Home';
 
 import Chat from './pages/Chat/chat';
 import { createContext, useState } from 'react';
+import Calendar from './pages/Calendar/Calendar';
+import CustomCalendar from './pages/Calendar/Calendar';
+import Dashboard from './pages/Dashboard/Dashboard';
 
 export const UserContext = createContext();
 
@@ -27,6 +30,8 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/home" element={<Home />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path='/calendar' element={<CustomCalendar/>}/>
+              <Route path='/dashboard' element={<Dashboard/>}/>
             </>
           )}
           <Route path="*" element={<Navigate to="/" />} />

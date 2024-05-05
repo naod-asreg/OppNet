@@ -42,7 +42,9 @@
 }
 
 .add-entry-button {
-  background-color: #07311a;
+  margin: 1rem; 
+  margin-left: 85%; 
+  background-color: black;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -53,4 +55,59 @@
 
 .add-entry-button:hover {
   background-color: #151617;
+}
+
+.popup { 
+  width: 40%;
+  position: relative; 
+   
+}
+.close-button:hover {
+  background-color: #aaa;
+}
+.close-button {
+  position: absolute;
+  top: 8%;
+  left: 87%;
+  background-color: #ccc;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.suggestion-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px; /* Limit the height of the suggestion list */
+  overflow-y: auto; /* Enable vertical scrolling if the list exceeds max-height */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for each suggestion item */
+.suggestion-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* Optional: Add some spacing between suggestion items */
+.suggestion-item + .suggestion-item {
+  border-top: 1px solid #ccc;
+}
+
+/* Optional: Style the input field to match the suggestions */
+.input-field {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 12px;
+  width: 100%;
+  box-sizing: border-box;
 }

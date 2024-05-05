@@ -1,12 +1,32 @@
-.SearchBar { 
-    background: white; 
-    border: 1px solid black; 
-    padding: 0.2em; 
-
-
-}
-
-.SearchBar input { 
-    width: 95%; 
-    border: none; 
-}
+.SearchBar {
+    display: flex;
+    align-items: center;
+    background: #fff; /* Match background color with select component */
+    border: 1px solid #ccc; /* Match border color with select component */
+    border-radius: 12px; /* Match border radius with select component */
+    padding: 5px; /* Match padding with select component */
+  }
+  
+  .SearchBar input {
+    flex: 1; /* Take remaining space */
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 16px; /* Match font size with select component */
+    padding: 5px; /* Match padding with select component */
+  }
+  
+  .search-icon {
+    color: #333;
+    font-size: 1rem;
+    padding-left: 0.5em;
+    /* Add cursor pointer to match select component */
+    cursor: pointer;
+  }
+  
+  /* Add hover and focus effects to match select component */
+  .SearchBar:hover,
+  .SearchBar:focus {
+    border-color: #777;
+  }
+  
